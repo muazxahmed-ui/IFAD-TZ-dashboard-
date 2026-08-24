@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Portfolio Command Centre</title>
+
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- HEADER -->
+
+      <header>
+        <div class="logos">
+          <img src="assets/ifad-logo.png" alt="IFAD" />
+
+          <img src="assets/un-logo.png" alt="UN" />
+
+          <img src="assets/tanzania-logo.png" alt="Tanzania" />
+        </div>
+
+        <div class="title">
+          <h1>PROJECT PORTFOLIO COMMAND CENTRE</h1>
+
+          <p>Programme Management Office</p>
+
+          <div class="sub">
+            <span> FY 2026/27 </span>
+
+            <span> • </span>
+
+            <span>
+              Last Sync:
+              <span id="lastSync"> --:-- </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="datetime">
+          <div id="date"></div>
+
+          <div id="clock"></div>
+        </div>
+      </header>
+
+      <!-- KPI CARDS -->
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon">💰</div>
+
+          <div>
+            <span> Total Investment </span>
+
+            <h2 id="kpi-investment">—</h2>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">📁</div>
+
+          <div>
+            <span> Projects </span>
+
+            <h2 id="kpi-projects">—</h2>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">🟢</div>
+
+          <div>
+            <span> Active Projects </span>
+
+            <h2 id="kpi-active">—</h2>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">👥</div>
+
+          <div>
+            <span> Beneficiaries </span>
+
+            <h2 id="kpi-beneficiaries">—</h2>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">📍</div>
+
+          <div>
+            <span> Districts </span>
+
+            <h2 id="kpi-districts">—</h2>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">💼</div>
+
+          <div>
+            <span> Jobs </span>
+
+            <h2 id="kpi-jobs">—</h2>
+          </div>
+        </div>
+
+        <div class="kpi-card progress-card">
+          <div>
+            <span> Portfolio Progress </span>
+
+            <h2 id="kpi-progress-value">—%</h2>
+
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                id="kpi-progress-fill"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT PORTFOLIO -->
+
+      <section class="portfolio-section">
+        <div class="portfolio-header">
+          <h2>Project Portfolio</h2>
+
+          <span id="portfolio-count"> — Active Projects </span>
+        </div>
+
+        <div class="portfolio-grid" id="portfolioGrid"></div>
+      </section>
+
+      <!-- EXECUTIVE PANELS -->
+
+      <section class="dashboard-grid">
+        <!-- MAP -->
+
+        <div class="panel map-panel">
+          <h2>🌍 Project Coverage Map – Tanzania</h2>
+
+          <div class="coverage-map-layout">
+            <div id="tanzaniaMap"></div>
+
+            <div class="map-side">
+              <h3>Projects Legend</h3>
+
+              <div id="projectLegend"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PORTFOLIO TIMELINE -->
+
+        <div class="panel timeline-panel">
+          <h2>📅 Portfolio Timeline</h2>
+
+          <div id="timeline"></div>
+        </div>
+
+        <!-- UPCOMING MISSIONS -->
+
+        <div class="panel missions-panel">
+          <h2>✈️ Upcoming Missions</h2>
+
+          <div id="milestones"></div>
+        </div>
+
+        <!-- PROJECT STAKEHOLDERS -->
+
+        <div class="panel stakeholders-panel">
+          <div class="stakeholders-heading">
+            <div>
+              <h2>🤝 Project Stakeholders</h2>
+
+              <p>
+                Financing, technical, government and project delivery partners
+              </p>
+            </div>
+
+            <select
+              id="stakeholderProjectSelect"
+              aria-label="Select stakeholder project"
+            >
+              <option value="ALL">All Projects</option>
+            </select>
+          </div>
+
+          <div id="stakeholders"></div>
+        </div>
+
+        <!-- DISBURSEMENTS -->
+
+        <div class="panel disbursement-panel">
+          <div class="disbursement-heading">
+            <div>
+              <h2>💰 Disbursement Overview</h2>
+
+              <p>IFAD financing utilization across the active portfolio</p>
+            </div>
+
+            <select
+              id="disbursementProjectSelect"
+              aria-label="Select disbursement project"
+            >
+              <option value="PORTFOLIO">Portfolio</option>
+            </select>
+          </div>
+
+          <div class="disbursement-layout">
+            <div class="disbursement-chart-box">
+              <canvas id="disbursementChart"> </canvas>
+            </div>
+
+            <div class="disbursement-summary">
+              <div class="disb-stat">
+                <span> Current IFAD Amount </span>
+
+                <strong id="disb-current"> — </strong>
+              </div>
+
+              <div class="disb-stat">
+                <span> Cumulative Disbursed </span>
+
+                <strong id="disb-cumulative"> — </strong>
+              </div>
+
+              <div class="disb-stat">
+                <span> Remaining Balance </span>
+
+                <strong id="disb-remaining"> — </strong>
+              </div>
+
+              <div class="disb-stat">
+                <span> Disbursement Rate </span>
+
+                <strong id="disb-rate"> — </strong>
+              </div>
+
+              <div class="disb-stat">
+                <span> Yearly Envelope </span>
+
+                <strong id="disb-envelope"> — </strong>
+              </div>
+
+              <div class="disb-stat">
+                <span> Disbursed YTD </span>
+
+                <strong id="disb-ytd"> — </strong>
+              </div>
+
+              <div class="disb-stat">
+                <span> Open Contracts </span>
+
+                <strong id="disb-contracts"> — </strong>
+              </div>
+
+              <div class="disb-stat">
+                <span> Contracts Value </span>
+
+                <strong id="disb-contract-value"> — </strong>
+              </div>
+
+              <div class="disb-stat">
+                <span> Planned Contract Payments </span>
+
+                <strong id="disb-planned"> — </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ANNOUNCEMENTS -->
+
+        <div class="panel announcements-panel">
+          <h2>📢 Announcements</h2>
+
+          <div class="announcement-ticker">
+            <div id="announcements"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

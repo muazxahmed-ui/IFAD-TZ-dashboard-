@@ -1,0 +1,2129 @@
+:root {
+  --green: #0b6e4f;
+  --bg: #eef3f8;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container {
+  width: 96%;
+  margin: 20px auto;
+}
+
+/* =====================================
+   HEADER
+   ===================================== */
+
+header {
+  background: #fff;
+  border-radius: 20px;
+
+  display: grid;
+
+  grid-template-columns:
+    320px
+    1fr
+    220px;
+
+  align-items: center;
+
+  padding: 25px 35px;
+
+  box-shadow: var(--shadow);
+
+  margin-bottom: 18px;
+}
+
+.logos {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.logos img {
+  max-height: 75px;
+  width: auto;
+  object-fit: contain;
+}
+
+.title {
+  text-align: center;
+}
+
+.title h1 {
+  font-size: clamp(28px, 2.4vw, 46px);
+
+  color: var(--green);
+
+  font-weight: 800;
+
+  line-height: 1.05;
+}
+
+.title p {
+  margin-top: 8px;
+
+  font-size: 22px;
+
+  color: #666;
+}
+
+.sub {
+  margin-top: 12px;
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 18px;
+
+  color: #777;
+
+  font-size: 16px;
+}
+
+.datetime {
+  text-align: right;
+}
+
+#date {
+  color: #666;
+
+  font-size: 18px;
+
+  margin-bottom: 8px;
+}
+
+#clock {
+  font-size: 40px;
+
+  font-weight: 700;
+}
+
+/* =====================================
+   KPI CARDS
+   ===================================== */
+
+.kpi-grid {
+  display: grid;
+
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 30px;
+}
+
+.kpi-card {
+  background: #fff;
+
+  border-radius: 18px;
+
+  padding: 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+
+  border-top: 5px solid #006f51;
+
+  transition: 0.3s;
+
+  min-width: 0;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+.kpi-icon {
+  width: 52px;
+
+  height: 52px;
+
+  border-radius: 50%;
+
+  background: #ecf8f2;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  font-size: 24px;
+
+  flex-shrink: 0;
+}
+
+.kpi-card span {
+  color: #7a7a7a;
+
+  font-size: 14px;
+}
+
+.kpi-card h2 {
+  margin-top: 8px;
+
+  margin-bottom: 0;
+
+  color: #006f51;
+
+  font-size: clamp(24px, 2vw, 40px);
+
+  overflow-wrap: anywhere;
+}
+
+.progress-card {
+  display: block;
+}
+
+.progress-bar {
+  margin-top: 12px;
+
+  height: 8px;
+
+  background: #e5e5e5;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0;
+
+  height: 100%;
+
+  background: #0b6b50;
+
+  border-radius: 20px;
+
+  transition: width 0.45s ease;
+}
+
+/* =====================================
+   PROJECT PORTFOLIO
+   ===================================== */
+
+.portfolio-section {
+  margin-bottom: 4px;
+}
+
+.portfolio-header {
+  margin-bottom: 16px;
+}
+
+.portfolio-header h2 {
+  font-size: 20px;
+
+  color: #111827;
+
+  margin-bottom: 3px;
+}
+
+.portfolio-header span {
+  font-size: 13px;
+
+  color: #475569;
+}
+
+.portfolio-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 20px;
+}
+
+.project-card {
+  background: #fff;
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+
+  border-top: 5px solid #006f51;
+
+  transition: 0.3s;
+
+  min-width: 0;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+}
+
+.status {
+  display: inline-block;
+
+  padding: 6px 12px;
+
+  border-radius: 30px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  color: #fff;
+
+  margin-bottom: 18px;
+}
+
+.project-card h3 {
+  margin-bottom: 6px;
+
+  color: #1f2937;
+
+  font-size: 25px;
+}
+
+.project-card p {
+  font-size: 14px;
+
+  color: #777;
+
+  margin-bottom: 22px;
+
+  min-height: 40px;
+}
+
+.progress-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-bottom: 8px;
+
+  font-weight: 600;
+}
+
+.progress {
+  height: 8px;
+
+  background: #e5e7eb;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  margin-bottom: 22px;
+}
+
+.fill {
+  height: 100%;
+
+  background: #0b6b50;
+}
+
+.project-details {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 18px;
+}
+
+.project-details small {
+  display: block;
+
+  font-size: 12px;
+
+  color: #888;
+
+  margin-bottom: 4px;
+}
+
+.project-details strong {
+  font-size: 16px;
+
+  color: #222;
+
+  overflow-wrap: anywhere;
+}
+
+/* =====================================
+   EXECUTIVE GRID
+   ===================================== */
+
+.dashboard-grid {
+  display: grid;
+
+  grid-template-columns: 1.2fr 1fr 1fr;
+
+  grid-template-areas:
+    "map timeline missions"
+    "map stakeholders stakeholders"
+    "disbursements disbursements disbursements"
+    "announcements announcements announcements";
+
+  gap: 20px;
+
+  margin-top: 30px;
+}
+
+.panel {
+  background: #fff;
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  box-shadow: var(--shadow);
+
+  min-height: 260px;
+}
+
+.panel h2 {
+  color: var(--green);
+
+  margin-bottom: 18px;
+
+  font-size: 20px;
+}
+
+.map-panel {
+  grid-area: map;
+
+  min-height: 620px;
+}
+
+.timeline-panel {
+  grid-area: timeline;
+}
+
+.missions-panel {
+  grid-area: missions;
+}
+
+.stakeholders-panel {
+  grid-area: stakeholders;
+
+  min-height: 300px;
+}
+
+.disbursement-panel {
+  grid-area: disbursements;
+
+  min-height: 420px;
+}
+
+.announcements-panel {
+  grid-area: announcements;
+
+  min-height: 120px;
+}
+
+/* =====================================
+   MAP
+   ===================================== */
+
+.coverage-map-layout {
+  display: grid;
+
+  grid-template-columns: 1fr;
+
+  gap: 16px;
+}
+
+#tanzaniaMap {
+  height: 520px;
+
+  width: 100%;
+
+  border-radius: 16px;
+
+  background: #f3f4f6;
+
+  overflow: hidden;
+}
+
+.leaflet-container {
+  background: #f3f4f6 !important;
+}
+
+.leaflet-control-container {
+  display: none !important;
+}
+
+.leaflet-interactive {
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.08));
+}
+
+.region-label {
+  background: rgba(255, 255, 255, 0.88);
+
+  border: 1px solid rgba(203, 213, 225, 0.9);
+
+  border-radius: 6px;
+
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+
+  color: #111827;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  padding: 2px 6px;
+
+  text-shadow: none;
+}
+
+.active-label {
+  color: #0f172a;
+}
+
+.map-popup strong {
+  color: #006b4f;
+
+  font-size: 14px;
+}
+
+.map-popup p {
+  margin: 4px 0;
+
+  font-weight: 700;
+}
+
+.map-popup small {
+  color: #6b7280;
+}
+
+.map-side {
+  background: #f9fafb;
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  border: 1px solid #d8e2e7;
+}
+
+.map-side h3 {
+  color: #006b4f;
+
+  margin-bottom: 18px;
+
+  font-size: 16px;
+}
+
+.legend-item {
+  display: grid;
+
+  grid-template-columns: auto 1fr;
+
+  gap: 14px;
+
+  padding: 14px 0;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  align-items: start;
+}
+
+.legend-item:last-child {
+  border-bottom: none;
+}
+
+.legend-color {
+  width: 20px;
+
+  height: 20px;
+
+  border-radius: 5px;
+
+  flex-shrink: 0;
+
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.legend-text strong {
+  display: block;
+
+  font-size: 15px;
+
+  color: #0f172a;
+
+  margin-bottom: 4px;
+}
+
+.legend-text p {
+  display: block;
+
+  margin: 2px 0;
+
+  color: #475569;
+
+  font-size: 13px;
+}
+
+/* =====================================
+   PLACEHOLDER PANELS
+   ===================================== */
+
+#timeline,
+#milestones,
+#stakeholders {
+  min-height: 170px;
+
+  border: 2px dashed #ddd;
+
+  border-radius: 12px;
+
+  color: #999;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+/* =====================================
+   PORTFOLIO TIMELINE
+   ===================================== */
+
+#timeline.populated {
+  display: block;
+
+  border: none;
+
+  min-height: 0;
+
+  padding: 0;
+
+  color: inherit;
+
+  overflow-y: auto;
+
+  max-height: 250px;
+}
+
+.timeline-item {
+  position: relative;
+
+  padding-left: 28px;
+
+  padding-bottom: 20px;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-item::before {
+  content: "";
+
+  position: absolute;
+
+  left: 4px;
+
+  top: 4px;
+
+  width: 11px;
+
+  height: 11px;
+
+  border-radius: 50%;
+
+  background: var(--timeline-color, #d1d5db);
+
+  border: 2px solid var(--timeline-color, #d1d5db);
+}
+
+.timeline-item::after {
+  content: "";
+
+  position: absolute;
+
+  left: 9px;
+
+  top: 15px;
+
+  bottom: -4px;
+
+  width: 2px;
+
+  background: #e5e7eb;
+}
+
+.timeline-item:last-child::after {
+  display: none;
+}
+
+.timeline-project {
+  display: inline-block;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  color: var(--timeline-color, var(--green));
+
+  margin-bottom: 4px;
+}
+
+.timeline-body strong {
+  display: block;
+
+  font-size: 14px;
+
+  color: #1f2937;
+
+  line-height: 1.35;
+}
+
+.timeline-meta {
+  display: flex;
+
+  gap: 8px;
+
+  flex-wrap: wrap;
+
+  margin-top: 4px;
+}
+
+.timeline-meta span {
+  font-size: 12px;
+
+  color: #888;
+}
+
+/* =====================================
+   UPCOMING MISSIONS
+   ===================================== */
+
+#milestones.populated {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+
+  border: none;
+
+  min-height: 0;
+
+  color: var(--text);
+
+  align-items: stretch;
+
+  justify-content: flex-start;
+}
+
+.mission-item {
+  background: #fff;
+
+  border: 1px solid #e5e7eb;
+
+  border-left: 5px solid var(--mission-color, var(--green));
+
+  border-radius: 12px;
+
+  padding: 14px 16px;
+
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+}
+
+.mission-top {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 8px;
+}
+
+.mission-project {
+  font-size: 13px;
+
+  font-weight: 800;
+
+  color: var(--mission-color, var(--green));
+}
+
+.mission-status {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 20px;
+
+  padding: 4px 9px;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.4px;
+}
+
+.mission-ongoing {
+  background: #e8f7ef;
+
+  color: #087443;
+}
+
+.mission-planned {
+  background: #fff7dc;
+
+  color: #986b00;
+}
+
+.mission-completed {
+  background: #eef2f6;
+
+  color: #64748b;
+}
+
+.mission-title {
+  display: block;
+
+  color: #1f2937;
+
+  font-size: 14px;
+
+  margin-bottom: 7px;
+}
+
+.mission-date {
+  color: #64748b;
+
+  font-size: 12px;
+
+  font-weight: 500;
+}
+
+/* =====================================
+   PROJECT STAKEHOLDERS
+   ===================================== */
+
+.stakeholders-heading {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 18px;
+
+  margin-bottom: 16px;
+}
+
+.stakeholders-heading h2 {
+  margin-bottom: 4px;
+}
+
+.stakeholders-heading p {
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+#stakeholderProjectSelect {
+  min-width: 155px;
+
+  border: 1px solid #d6dee5;
+
+  border-radius: 10px;
+
+  background: #fff;
+
+  padding: 8px 12px;
+
+  color: #1f2937;
+
+  font-family: Inter, sans-serif;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+#stakeholderProjectSelect:focus {
+  border-color: #0b6e4f;
+
+  box-shadow: 0 0 0 3px rgba(11, 110, 79, 0.08);
+}
+
+#stakeholders.populated {
+  display: block;
+
+  border: none;
+
+  min-height: 0;
+
+  color: inherit;
+
+  max-height: 360px;
+
+  overflow-y: auto;
+
+  padding-right: 4px;
+}
+
+.stakeholder-project {
+  border: 1px solid #e5e7eb;
+
+  border-top: 4px solid var(--project-color, var(--green));
+
+  border-radius: 14px;
+
+  padding: 14px;
+
+  margin-bottom: 14px;
+
+  background: #fff;
+}
+
+.stakeholder-project:last-child {
+  margin-bottom: 0;
+}
+
+.stakeholder-project-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+.stakeholder-project-header h3 {
+  color: var(--project-color, var(--green));
+
+  font-size: 16px;
+}
+
+.stakeholder-project-header span {
+  color: #64748b;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+.stakeholder-category-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.stakeholder-category {
+  background: #f8fafc;
+
+  border: 1px solid #e7edf2;
+
+  border-radius: 12px;
+
+  padding: 12px;
+
+  min-width: 0;
+}
+
+.stakeholder-category h4 {
+  color: #334155;
+
+  font-size: 11px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.45px;
+
+  margin-bottom: 9px;
+}
+
+.stakeholder-row {
+  padding: 9px 0;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.stakeholder-row:first-of-type {
+  border-top: none;
+
+  padding-top: 0;
+}
+
+.stakeholder-main {
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  align-items: flex-start;
+}
+
+.stakeholder-main strong {
+  color: #0f172a;
+
+  font-size: 13px;
+
+  line-height: 1.3;
+}
+
+.stakeholder-role {
+  color: #64748b;
+
+  font-size: 11px;
+
+  line-height: 1.35;
+
+  text-align: right;
+
+  max-width: 48%;
+}
+
+.stakeholder-badges {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 5px;
+
+  margin-top: 6px;
+}
+
+.stakeholder-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  border-radius: 999px;
+
+  padding: 3px 7px;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  background: #eef2f6;
+
+  color: #475569;
+}
+
+.stakeholder-badge.status-active {
+  background: #e8f7ef;
+
+  color: #087443;
+}
+
+.stakeholder-badge.status-pending,
+.stakeholder-badge.status-in-progress {
+  background: #fff7dc;
+
+  color: #986b00;
+}
+
+.stakeholder-next {
+  margin-top: 6px;
+
+  font-size: 10px;
+
+  line-height: 1.35;
+
+  color: #475569;
+}
+
+.stakeholder-next span {
+  font-weight: 800;
+
+  color: #334155;
+}
+
+/* =====================================
+   DISBURSEMENT OVERVIEW
+   ===================================== */
+
+.disbursement-heading {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.disbursement-heading h2 {
+  margin-bottom: 4px;
+}
+
+.disbursement-heading p {
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+#disbursementProjectSelect {
+  min-width: 170px;
+
+  border: 1px solid #d6dee5;
+
+  border-radius: 10px;
+
+  background: #fff;
+
+  padding: 9px 14px;
+
+  color: #1f2937;
+
+  font-family: Inter, sans-serif;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+#disbursementProjectSelect:focus {
+  border-color: #0b6e4f;
+
+  box-shadow: 0 0 0 3px rgba(11, 110, 79, 0.08);
+}
+
+.disbursement-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(300px, 0.8fr)
+    minmax(0, 1.8fr);
+
+  gap: 30px;
+
+  align-items: center;
+}
+
+.disbursement-chart-box {
+  position: relative;
+
+  width: 100%;
+
+  height: 310px;
+}
+
+.disbursement-chart-box canvas {
+  max-width: 100%;
+
+  max-height: 100%;
+}
+
+.disbursement-summary {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(130px, 1fr));
+
+  gap: 12px;
+}
+
+.disb-stat {
+  background: #f8fafc;
+
+  border: 1px solid #e4eaf0;
+
+  border-radius: 12px;
+
+  padding: 15px;
+
+  min-width: 0;
+}
+
+.disb-stat span {
+  display: block;
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  font-weight: 500;
+
+  margin-bottom: 8px;
+
+  line-height: 1.35;
+}
+
+.disb-stat strong {
+  display: block;
+
+  color: #0f172a;
+
+  font-size: 18px;
+
+  font-weight: 750;
+
+  overflow-wrap: anywhere;
+}
+
+/* =====================================
+   ANNOUNCEMENTS
+   ===================================== */
+
+.announcement-ticker {
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  border-radius: 12px;
+
+  background: #f8fafc;
+
+  padding: 16px;
+}
+
+#announcements {
+  display: inline-block;
+
+  color: #374151;
+
+  font-weight: 600;
+}
+
+#announcements.scrolling {
+  animation-name: tickerMove;
+
+  animation-timing-function: linear;
+
+  animation-iteration-count: 1;
+}
+
+@keyframes tickerMove {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* =====================================
+   RESPONSIVE
+   ===================================== */
+
+@media (max-width: 1500px) {
+  .kpi-grid {
+    gap: 12px;
+  }
+
+  .kpi-card {
+    padding: 14px;
+  }
+
+  .kpi-icon {
+    width: 44px;
+
+    height: 44px;
+
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 1250px) {
+  header {
+    grid-template-columns:
+      250px
+      1fr
+      180px;
+  }
+
+  .logos img {
+    max-height: 58px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .portfolio-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+
+    grid-template-areas:
+      "map"
+      "timeline"
+      "missions"
+      "stakeholders"
+      "disbursements"
+      "announcements";
+  }
+
+  .map-panel {
+    min-height: auto;
+  }
+
+  #tanzaniaMap {
+    height: 420px;
+  }
+
+  .stakeholder-category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .disbursement-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .disbursement-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .container {
+    width: 94%;
+  }
+
+  header {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+
+    text-align: center;
+  }
+
+  .logos {
+    justify-content: center;
+  }
+
+  .datetime {
+    text-align: center;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stakeholders-heading,
+  .disbursement-heading {
+    flex-direction: column;
+  }
+
+  #stakeholderProjectSelect,
+  #disbursementProjectSelect {
+    width: 100%;
+  }
+
+  .stakeholder-main {
+    flex-direction: column;
+
+    gap: 3px;
+  }
+
+  .stakeholder-role {
+    text-align: left;
+
+    max-width: 100%;
+  }
+
+  .disbursement-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ============================================================
+   EXECUTIVE VISUAL REFINEMENT
+   Add at END of styles.css
+   ============================================================ */
+
+:root {
+  --green: #0b6e4f;
+  --green-dark: #07543d;
+  --green-soft: #eaf5f1;
+
+  --bg: #edf2f6;
+  --card: #ffffff;
+
+  --text: #172033;
+  --muted: #697586;
+
+  --border: #dde5eb;
+
+  --shadow-sm:
+    0 2px 5px rgba(15, 23, 42, 0.04), 0 8px 18px rgba(15, 23, 42, 0.04);
+
+  --shadow:
+    0 3px 8px rgba(15, 23, 42, 0.04), 0 12px 28px rgba(15, 23, 42, 0.06);
+
+  --shadow-hover:
+    0 8px 18px rgba(15, 23, 42, 0.06), 0 20px 38px rgba(15, 23, 42, 0.08);
+}
+
+/* ============================================================
+   PAGE
+   ============================================================ */
+
+body {
+  background: linear-gradient(180deg, #f5f8fa 0, #edf2f6 180px, #edf2f6 100%);
+
+  color: var(--text);
+
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  width: min(97%, 1900px);
+
+  margin: 16px auto 30px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+header {
+  border-radius: 16px;
+
+  padding: 18px 26px;
+
+  margin-bottom: 12px;
+
+  border: 1px solid rgba(221, 229, 235, 0.9);
+
+  box-shadow: var(--shadow-sm);
+}
+
+.logos {
+  gap: 18px;
+}
+
+.logos img {
+  max-height: 58px;
+}
+
+.title h1 {
+  font-size: clamp(24px, 2vw, 38px);
+
+  letter-spacing: -0.8px;
+
+  color: var(--green-dark);
+}
+
+.title p {
+  margin-top: 5px;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+  color: var(--muted);
+}
+
+.sub {
+  margin-top: 6px;
+
+  gap: 12px;
+
+  font-size: 11px;
+
+  color: #8a96a5;
+}
+
+#date {
+  font-size: 13px;
+
+  color: var(--muted);
+
+  margin-bottom: 3px;
+}
+
+#clock {
+  font-size: 28px;
+
+  font-weight: 700;
+
+  letter-spacing: -0.5px;
+
+  color: #172033;
+}
+
+/* ============================================================
+   KPI CARDS
+   ============================================================ */
+
+.kpi-grid {
+  gap: 9px;
+
+  margin-bottom: 18px;
+}
+
+.kpi-card {
+  min-height: 82px;
+
+  border-radius: 13px;
+
+  padding: 12px 14px;
+
+  gap: 11px;
+
+  border: 1px solid var(--border);
+
+  border-top: 2px solid var(--green);
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow: var(--shadow);
+
+  border-color: #cad7df;
+}
+
+.kpi-icon {
+  width: 38px;
+
+  height: 38px;
+
+  font-size: 17px;
+
+  background: var(--green-soft);
+}
+
+.kpi-card span {
+  display: block;
+
+  font-size: 10px;
+
+  font-weight: 500;
+
+  color: #7b8794;
+
+  margin-bottom: 1px;
+}
+
+.kpi-card h2 {
+  margin-top: 3px;
+
+  font-size: clamp(19px, 1.35vw, 27px);
+
+  line-height: 1;
+
+  letter-spacing: -0.4px;
+
+  color: var(--green);
+}
+
+.progress-card {
+  display: flex;
+
+  align-items: center;
+}
+
+.progress-card > div {
+  width: 100%;
+}
+
+.progress-bar {
+  height: 5px;
+
+  margin-top: 8px;
+
+  background: #e5ece9;
+}
+
+/* ============================================================
+   PORTFOLIO HEADER
+   ============================================================ */
+
+.portfolio-section {
+  margin-bottom: 0;
+}
+
+.portfolio-header {
+  margin: 4px 0 11px;
+}
+
+.portfolio-header h2 {
+  font-size: 15px;
+
+  font-weight: 700;
+
+  letter-spacing: -0.2px;
+
+  margin-bottom: 2px;
+}
+
+.portfolio-header span {
+  font-size: 10px;
+
+  color: var(--muted);
+}
+
+/* ============================================================
+   PROJECT CARDS
+   ============================================================ */
+
+.portfolio-grid {
+  gap: 12px;
+}
+
+.project-card {
+  border-radius: 14px;
+
+  padding: 17px;
+
+  border: 1px solid var(--border);
+
+  border-top-width: 4px;
+
+  box-shadow: var(--shadow-sm);
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow: var(--shadow-hover);
+}
+
+.status {
+  padding: 4px 9px;
+
+  font-size: 9px;
+
+  margin-bottom: 12px;
+}
+
+.project-card h3 {
+  font-size: 19px;
+
+  letter-spacing: -0.3px;
+}
+
+.project-card p {
+  font-size: 11px;
+
+  line-height: 1.45;
+
+  margin-bottom: 14px;
+}
+
+.progress-header {
+  font-size: 11px;
+
+  margin-bottom: 5px;
+}
+
+.progress {
+  height: 5px;
+
+  margin-bottom: 16px;
+}
+
+.project-details {
+  gap: 11px 15px;
+}
+
+.project-details small {
+  font-size: 9px;
+}
+
+.project-details strong {
+  font-size: 12px;
+}
+
+/* ============================================================
+   EXECUTIVE DASHBOARD
+   ============================================================ */
+
+.dashboard-grid {
+  gap: 10px;
+
+  margin-top: 12px;
+}
+
+.panel {
+  border-radius: 14px;
+
+  padding: 15px;
+
+  border: 1px solid var(--border);
+
+  box-shadow: var(--shadow-sm);
+
+  min-height: 220px;
+}
+
+.panel:hover {
+  border-color: #d3dde4;
+}
+
+.panel h2 {
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: -0.1px;
+
+  color: var(--green);
+
+  margin-bottom: 10px;
+}
+
+.map-panel {
+  min-height: 560px;
+}
+
+.stakeholders-panel {
+  min-height: 260px;
+}
+
+.disbursement-panel {
+  min-height: 360px;
+}
+
+.announcements-panel {
+  min-height: 90px;
+}
+
+/* ============================================================
+   MAP
+   ============================================================ */
+
+#tanzaniaMap {
+  height: 430px;
+
+  border-radius: 11px;
+
+  border: 1px solid #e0e7ec;
+}
+
+.map-side {
+  border-radius: 11px;
+
+  padding: 13px;
+
+  background: #f8fafb;
+}
+
+.map-side h3 {
+  font-size: 11px;
+
+  margin-bottom: 10px;
+}
+
+.legend-item {
+  gap: 9px;
+
+  padding: 8px 0;
+}
+
+.legend-color {
+  width: 12px;
+
+  height: 12px;
+
+  border-radius: 3px;
+}
+
+.legend-text strong {
+  font-size: 10px;
+
+  margin-bottom: 1px;
+}
+
+.legend-text p {
+  font-size: 8px;
+}
+
+.legend-text small {
+  font-size: 8px;
+
+  line-height: 1.3;
+
+  color: #7b8794;
+}
+
+/* ============================================================
+   TIMELINE
+   ============================================================ */
+
+#timeline.populated {
+  max-height: 245px;
+
+  padding-right: 5px;
+}
+
+.timeline-item {
+  padding-left: 23px;
+
+  padding-bottom: 15px;
+}
+
+.timeline-item::before {
+  width: 8px;
+
+  height: 8px;
+
+  left: 5px;
+}
+
+.timeline-item::after {
+  left: 9px;
+
+  top: 13px;
+}
+
+.timeline-project {
+  font-size: 9px;
+
+  margin-bottom: 2px;
+}
+
+.timeline-body strong {
+  font-size: 11px;
+
+  line-height: 1.3;
+}
+
+.timeline-meta span {
+  font-size: 9px;
+}
+
+/* ============================================================
+   MISSIONS
+   ============================================================ */
+
+#milestones.populated {
+  gap: 8px;
+}
+
+.mission-item {
+  border-radius: 9px;
+
+  padding: 10px 12px;
+
+  border-left-width: 3px;
+
+  box-shadow: none;
+
+  background: #fbfcfd;
+}
+
+.mission-top {
+  margin-bottom: 5px;
+}
+
+.mission-project {
+  font-size: 9px;
+}
+
+.mission-status {
+  padding: 3px 7px;
+
+  font-size: 8px;
+}
+
+.mission-title {
+  font-size: 11px;
+
+  margin-bottom: 4px;
+}
+
+.mission-date {
+  font-size: 9px;
+}
+
+/* ============================================================
+   STAKEHOLDERS
+   ============================================================ */
+
+.stakeholders-heading {
+  margin-bottom: 10px;
+}
+
+.stakeholders-heading h2 {
+  margin-bottom: 2px;
+}
+
+.stakeholders-heading p {
+  font-size: 9px;
+}
+
+#stakeholderProjectSelect,
+#disbursementProjectSelect {
+  border-radius: 8px;
+
+  padding: 6px 9px;
+
+  font-size: 9px;
+
+  min-height: 30px;
+
+  background: #fbfcfd;
+}
+
+#stakeholders.populated {
+  max-height: 280px;
+}
+
+.stakeholder-project {
+  padding: 10px;
+
+  margin-bottom: 8px;
+
+  border-radius: 10px;
+
+  border-top-width: 3px;
+}
+
+.stakeholder-project-header {
+  margin-bottom: 7px;
+}
+
+.stakeholder-project-header h3 {
+  font-size: 11px;
+}
+
+.stakeholder-project-header span {
+  font-size: 8px;
+}
+
+.stakeholder-category {
+  padding: 8px;
+
+  border-radius: 8px;
+}
+
+.stakeholder-main strong {
+  font-size: 10px;
+}
+
+.stakeholder-role {
+  font-size: 8px;
+}
+
+.stakeholder-badge {
+  font-size: 7px;
+
+  padding: 2px 5px;
+}
+
+.stakeholder-next {
+  font-size: 8px;
+}
+
+/* ============================================================
+   DISBURSEMENTS
+   ============================================================ */
+
+.disbursement-heading {
+  margin-bottom: 12px;
+}
+
+.disbursement-heading p {
+  font-size: 9px;
+}
+
+.disbursement-layout {
+  gap: 22px;
+
+  grid-template-columns:
+    minmax(270px, 0.7fr)
+    minmax(0, 2fr);
+}
+
+.disbursement-chart-box {
+  height: 245px;
+}
+
+.disbursement-summary {
+  gap: 8px;
+}
+
+.disb-stat {
+  padding: 11px 12px;
+
+  border-radius: 9px;
+
+  background: #f8fafb;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.disb-stat:hover {
+  background: #f2f7f5;
+
+  transform: translateY(-1px);
+}
+
+.disb-stat span {
+  font-size: 8px;
+
+  margin-bottom: 5px;
+}
+
+.disb-stat strong {
+  font-size: 15px;
+
+  letter-spacing: -0.2px;
+
+  color: #172033;
+}
+
+/* Highlight first financial KPIs */
+
+.disb-stat:nth-child(1) strong,
+.disb-stat:nth-child(2) strong,
+.disb-stat:nth-child(4) strong {
+  color: var(--green);
+}
+
+/* ============================================================
+   ANNOUNCEMENTS
+   ============================================================ */
+
+.announcement-ticker {
+  border-radius: 9px;
+
+  padding: 10px 12px;
+
+  background: #f8fafb;
+
+  border: 1px solid #e8edf1;
+}
+
+#announcements {
+  font-size: 10px;
+
+  color: #465466;
+}
+
+/* ============================================================
+   CLEAN SCROLLBARS
+   ============================================================ */
+
+#timeline,
+#stakeholders,
+#milestones {
+  scrollbar-width: thin;
+
+  scrollbar-color: #c7d2da transparent;
+}
+
+#timeline::-webkit-scrollbar,
+#stakeholders::-webkit-scrollbar,
+#milestones::-webkit-scrollbar {
+  width: 5px;
+}
+
+#timeline::-webkit-scrollbar-thumb,
+#stakeholders::-webkit-scrollbar-thumb,
+#milestones::-webkit-scrollbar-thumb {
+  background: #c7d2da;
+
+  border-radius: 999px;
+}
+
+/* ============================================================
+   BETTER MEDIUM DESKTOP LAYOUT
+   ============================================================ */
+
+@media (max-width: 1450px) {
+  header {
+    grid-template-columns: 240px 1fr 170px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1.15fr 1fr 1fr;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .map-panel {
+    min-height: 520px;
+  }
+
+  #tanzaniaMap {
+    height: 390px;
+  }
+}
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 1180px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+
+    grid-template-areas:
+      "map map"
+      "timeline missions"
+      "stakeholders stakeholders"
+      "disbursements disbursements"
+      "announcements announcements";
+  }
+
+  .map-panel {
+    min-height: auto;
+  }
+
+  #tanzaniaMap {
+    height: 440px;
+  }
+}
