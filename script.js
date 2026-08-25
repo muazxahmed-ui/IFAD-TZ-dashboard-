@@ -652,24 +652,32 @@ let projectData = buildDefaultProjectData();
    ============================================================ */
 
 function buildProjectCard(project, index) {
-  const projectName = getProjectName(project) || `Project ${index + 1}`;
+  const projectName =
+    getProjectName(project) || `Project ${index + 1}`;
 
   const override = getProjectOverride(projectName);
 
   const color =
     getRowValue(project, ["Color", "Colour"]) ||
     override?.color ||
-    DEFAULT_PROJECT_COLORS[index % DEFAULT_PROJECT_COLORS.length];
+    DEFAULT_PROJECT_COLORS[
+      index % DEFAULT_PROJECT_COLORS.length
+    ];
 
   const description =
-    getRowValue(project, ["Description", "Summary", "Project Description"]) ||
+    getRowValue(project, [
+      "Description",
+      "Summary",
+      "Project Description",
+    ]) ||
     override?.description ||
     "";
 
-  const status = getRowValue(project, [
+  const statusLabel = getRowValue(project, [
     "StatusLabel",
     "Status Label",
     "Status",
+    "Project Status",
   ]);
 
   const progress = Math.max(
@@ -696,7 +704,11 @@ function buildProjectCard(project, index) {
     ]) || "—";
 
   const duration =
-    getRowValue(project, ["Duration", "Timeline", "Project Duration"]) || "—";
+    getRowValue(project, [
+      "Duration",
+      "Timeline",
+      "Project Duration",
+    ]) || "—";
 
   const beneficiaries =
     getRowValue(project, [
@@ -706,53 +718,45 @@ function buildProjectCard(project, index) {
       "Target Beneficiaries",
     ]) || "—";
 
- const projectStatus =
-  getRowValue(project, [
-    "Status",
-    "Status Label",
-    "Project Status",
-  ]) || "—";
+  const projectStatus =
+    getRowValue(project, [
+      "Status",
+      "Status Label",
+      "Project Status",
+    ]) || "—";
 
   return `
-
     <div
       class="project-card"
       style="
-        border-top-color:
-        ${escapeHtml(color)}
+        border-top-color: ${escapeHtml(color)}
       "
     >
 
       ${
-        status
+        statusLabel
           ? `
             <div
               class="status"
               style="
-                background:
-                ${escapeHtml(color)}
+                background: ${escapeHtml(color)}
               "
             >
-              ${escapeHtml(status.toUpperCase())}
+              ${escapeHtml(statusLabel.toUpperCase())}
             </div>
           `
           : ""
       }
 
-
       <h3>
         ${escapeHtml(projectName)}
       </h3>
-
 
       <p>
         ${escapeHtml(description)}
       </p>
 
-
-      <div
-        class="progress-header"
-      >
+      <div class="progress-header">
 
         <span>
           Progress
@@ -764,29 +768,21 @@ function buildProjectCard(project, index) {
 
       </div>
 
-
       <div class="progress">
 
         <div
           class="fill"
           style="
-            width:
-            ${progress}%;
-
-            background:
-            ${escapeHtml(color)};
+            width: ${progress}%;
+            background: ${escapeHtml(color)};
           "
         ></div>
 
       </div>
 
-
-      <div
-        class="project-details"
-      >
+      <div class="project-details">
 
         <div>
-
           <small>
             Investment
           </small>
@@ -794,12 +790,9 @@ function buildProjectCard(project, index) {
           <strong>
             ${escapeHtml(investment)}
           </strong>
-
         </div>
 
-
         <div>
-
           <small>
             Duration
           </small>
@@ -807,12 +800,9 @@ function buildProjectCard(project, index) {
           <strong>
             ${escapeHtml(duration)}
           </strong>
-
         </div>
 
-
         <div>
-
           <small>
             Beneficiaries
           </small>
@@ -820,29 +810,23 @@ function buildProjectCard(project, index) {
           <strong>
             ${escapeHtml(beneficiaries)}
           </strong>
-
         </div>
 
+        <div>
+          <small>
+            Status
+          </small>
 
-       <div>
-
-  <small>
-    Status
-  </small>
-
-  <strong>
-    ${escapeHtml(projectStatus)}
-  </strong>
-
-</div>
+          <strong>
+            ${escapeHtml(projectStatus)}
+          </strong>
+        </div>
 
       </div>
 
     </div>
-
   `;
 }
-
 /* ============================================================
    9. PROJECTS — GOOGLE SHEET CONNECTION
    ============================================================ */
