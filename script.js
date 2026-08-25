@@ -824,17 +824,17 @@ function buildProjectCard(project, index) {
         </div>
 
 
-        <div>
+       <div>
 
-          <small>
-            Next Step
-          </small>
+  <small>
+    Status
+  </small>
 
-          <strong>
-            ${escapeHtml(nextStep)}
-          </strong>
+  <strong>
+    ${escapeHtml(projectStatus)}
+  </strong>
 
-        </div>
+</div>
 
       </div>
 
