@@ -706,14 +706,12 @@ function buildProjectCard(project, index) {
       "Target Beneficiaries",
     ]) || "—";
 
-  const nextStep =
-    getRowValue(project, [
-      "NextStep",
-      "Next Step",
-      "NextAction",
-      "Next Action",
-      "Next Milestone",
-    ]) || "—";
+ const projectStatus =
+  getRowValue(project, [
+    "Status",
+    "Status Label",
+    "Project Status",
+  ]) || "—";
 
   return `
 
