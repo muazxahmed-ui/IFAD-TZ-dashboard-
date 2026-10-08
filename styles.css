@@ -2127,3 +2127,208 @@ header {
     height: 440px;
   }
 }
+
+
+/* ============================================================
+   C-SDTP LIVE METRICS — inside the C-SDTP project card
+   ============================================================ */
+
+.csdtp-live {
+  margin-top: 12px;
+
+  padding-top: 10px;
+
+  border-top: 1px dashed #cfe0d8;
+}
+
+.csdtp-live-head {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 8px;
+}
+
+.csdtp-live-pill {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  font-size: 8px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.6px;
+
+  padding: 3px 8px;
+
+  border-radius: 999px;
+
+  background: #e6f4ee;
+
+  color: var(--green, #0b6e4f);
+}
+
+.csdtp-live-pill::before {
+  content: "";
+
+  width: 5px;
+
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+
+  animation: csdtpPulse 1.8s ease-in-out infinite;
+}
+
+.csdtp-live-head em {
+  font-style: normal;
+
+  font-size: 8px;
+
+  color: var(--muted, #64748b);
+}
+
+.csdtp-live-head.is-stale .csdtp-live-pill {
+  background: #fdecea;
+
+  color: #b42318;
+}
+
+.csdtp-live-head.is-off .csdtp-live-pill {
+  background: #eef2f6;
+
+  color: var(--muted, #64748b);
+}
+
+.csdtp-live-head.is-off .csdtp-live-pill::before,
+.csdtp-live-head.is-stale .csdtp-live-pill::before {
+  animation: none;
+}
+
+@keyframes csdtpPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.csdtp-live-bar {
+  margin-bottom: 8px;
+}
+
+.csdtp-live-bar-top {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: baseline;
+
+  margin-bottom: 3px;
+}
+
+.csdtp-live-bar-top span {
+  font-size: 9px;
+
+  font-weight: 600;
+}
+
+.csdtp-live-bar-top strong {
+  font-size: 10px;
+
+  color: var(--green, #0b6e4f);
+}
+
+.csdtp-live-track {
+  height: 5px;
+
+  border-radius: 999px;
+
+  background: #e2e8f0;
+
+  overflow: hidden;
+}
+
+.csdtp-live-fill {
+  height: 100%;
+
+  border-radius: 999px;
+
+  background: var(--green, #0b6e4f);
+}
+
+.csdtp-live-bar small {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 8px;
+
+  color: var(--muted, #64748b);
+}
+
+.csdtp-live-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 6px;
+
+  margin-top: 4px;
+}
+
+.csdtp-live-stat {
+  padding: 7px 8px;
+
+  border-radius: 8px;
+
+  background: #f8fafb;
+
+  min-width: 0;
+}
+
+.csdtp-live-stat small {
+  display: block;
+
+  font-size: 8px;
+
+  color: var(--muted, #64748b);
+
+  margin-bottom: 2px;
+}
+
+.csdtp-live-stat strong {
+  display: block;
+
+  font-size: 13px;
+
+  color: var(--green, #0b6e4f);
+
+  white-space: nowrap;
+}
+
+.csdtp-live-stat em {
+  display: block;
+
+  margin-top: 1px;
+
+  font-style: normal;
+
+  font-size: 7px;
+
+  color: var(--muted, #64748b);
+
+  white-space: nowrap;
+}
