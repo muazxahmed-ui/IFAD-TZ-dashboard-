@@ -38,6 +38,20 @@ const CONFIG = {
   ANNOUNCEMENTS_CSV_URL:
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vRutNgZhOKTDMh98xxopabd4f-Eo683y-PHrEP-HvEA2DKqe8jCCNqElgH8zZK81A9zbkn7eHX_7sUK/pub?gid=1917123801&single=true&output=csv",
 
+  /*
+     C-SDTP LIVE METRICS (from the IT API, via Apps Script -> Google Sheet).
+     Paste the published CSV link of the API_CSDTP tab here.
+     Leave empty to keep the panel switched off.
+  */
+  CSDTP_API_CSV_URL:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRutNgZhOKTDMh98xxopabd4f-Eo683y-PHrEP-HvEA2DKqe8jCCNqElgH8zZK81A9zbkn7eHX_7sUK/pub?gid=1838922691&single=true&output=csv",
+
+  /* Currency prefix for money values, e.g. "TZS " or "$". Confirm with IT. */
+  CSDTP_CURRENCY: "",
+
+  /* Flag the panel as stale if the API sync is older than this. */
+  CSDTP_STALE_MINUTES: 90,
+
   GEOJSON_URL: "./tanzania-regions.geojson.json",
 
   SYNC_MINUTES: 5,
@@ -706,12 +720,8 @@ function buildProjectCard(project, index) {
       "Target Beneficiaries",
     ]) || "—";
 
- const projectStatus =
-  getRowValue(project, [
-    "Status",
-    "Status Label",
-    "Project Status",
-  ]) || "—";
+  const projectStatus =
+    getRowValue(project, ["Status", "Status Label", "Project Status"]) || "—";
 
   return `
 
@@ -837,6 +847,13 @@ function buildProjectCard(project, index) {
 </div>
 
       </div>
+
+
+      ${
+        getProjectOverride(projectName)?.displayName === "C-SDTP"
+          ? `<div class="csdtp-live" data-csdtp-live>${buildCsdtpLiveBlock()}</div>`
+          : ""
+      }
 
     </div>
 
@@ -2638,6 +2655,265 @@ async function refreshAnnouncements() {
 }
 
 /* ============================================================
+   19B. C-SDTP LIVE METRICS (API -> GOOGLE SHEET)
+   Shown INSIDE the C-SDTP project card.
+   Reads the API_CSDTP tab written by the Apps Script sync.
+   Tab layout: source | group | metric | value | updated
+   ============================================================ */
+
+/* status: "pending" | "off" | "error" | "ok" */
+let csdtpLive = {
+  status: "pending",
+  metrics: {},
+  updatedLabel: "",
+  stale: false,
+};
+
+function csdtpCompact(value, prefix = "") {
+  const number = Number(value);
+
+  if (value === undefined || value === null || !Number.isFinite(number)) {
+    return "—";
+  }
+
+  const abs = Math.abs(number);
+
+  if (abs >= 1e9) return `${prefix}${(number / 1e9).toFixed(2)}B`;
+  if (abs >= 1e6) return `${prefix}${(number / 1e6).toFixed(2)}M`;
+  if (abs >= 1e3) return `${prefix}${(number / 1e3).toFixed(1)}K`;
+
+  return `${prefix}${number.toLocaleString()}`;
+}
+
+function csdtpLitres(value) {
+  const text = csdtpCompact(value);
+
+  return text === "—" ? text : `${text} L`;
+}
+
+function csdtpPercent(value) {
+  const number = Number(value);
+
+  if (value === undefined || value === null || !Number.isFinite(number)) {
+    return "—";
+  }
+
+  return `${number.toFixed(1)}%`;
+}
+
+function csdtpBarWidth(value) {
+  return Math.max(0, Math.min(100, Number(value) || 0));
+}
+
+/* The 9 small stat tiles shown in the card. */
+function csdtpMiniStats(m) {
+  const money = (key) => csdtpCompact(m[key], CONFIG.CSDTP_CURRENCY);
+
+  return [
+    { label: "Expenditure", value: money("disbursement.expenditure") },
+    {
+      label: "MCCs",
+      value: csdtpCompact(m["mcc_constructed_rehab.total"]),
+      sub: `${csdtpCompact(m["mcc_constructed_rehab.mcc_constructed"])} built · ${csdtpCompact(m["mcc_constructed_rehab.mcc_rehabilitated"])} rehab`,
+    },
+    {
+      label: "MCPs",
+      value: csdtpCompact(m["mcp_constructed_rehab.total"]),
+      sub: `${csdtpCompact(m["mcp_constructed_rehab.mcp_constructed"])} built · ${csdtpCompact(m["mcp_constructed_rehab.mcp_rehabilitated"])} rehab`,
+    },
+    {
+      label: "L-FFS Sessions",
+      value: csdtpCompact(m["ffs_sessions.total_sessions"]),
+      sub: `${csdtpCompact(m["ffs_sessions.topics_finished"])} topics`,
+    },
+    {
+      label: "MSP Meetings",
+      value: csdtpCompact(m["msp_meetings.msp_meetings_conducted"]),
+    },
+    {
+      label: "Pass-On Gifts",
+      value: csdtpCompact(m["pass_on_gifts.total_pass_on_gifts"]),
+    },
+    {
+      label: "Milk · MCC",
+      value: csdtpLitres(
+        m["total_milk_received_mcc.total_milk_received_litres"],
+      ),
+    },
+    {
+      label: "Milk · MCP",
+      value: csdtpLitres(
+        m["total_milk_received_mcp.total_milk_received_litres"],
+      ),
+    },
+    {
+      label: "MCC Sales",
+      value: money("total_mcc_sales_value.total_sales_value"),
+    },
+  ];
+}
+
+function buildCsdtpBarRow(label, percent, detail) {
+  return `
+    <div class="csdtp-live-bar">
+      <div class="csdtp-live-bar-top">
+        <span>${escapeHtml(label)}</span>
+        <strong>${escapeHtml(csdtpPercent(percent))}</strong>
+      </div>
+      <div class="csdtp-live-track">
+        <div class="csdtp-live-fill" style="width:${csdtpBarWidth(percent)}%"></div>
+      </div>
+      <small>${escapeHtml(detail)}</small>
+    </div>
+  `;
+}
+
+/* Inner HTML for the live block inside the C-SDTP card. */
+function buildCsdtpLiveBlock() {
+  const state = csdtpLive;
+
+  const head = (pill, note, extraClass = "") => `
+    <div class="csdtp-live-head ${extraClass}">
+      <span class="csdtp-live-pill">${escapeHtml(pill)}</span>
+      <em>${escapeHtml(note)}</em>
+    </div>
+  `;
+
+  if (state.status === "off") {
+    return head("MIS", "Not connected yet", "is-off");
+  }
+
+  if (state.status === "pending") {
+    return head("MIS", "Loading live data…", "is-off");
+  }
+
+  if (state.status === "error") {
+    return head("MIS", "Live data unavailable", "is-stale");
+  }
+
+  const m = state.metrics;
+
+  const tiles = csdtpMiniStats(m)
+    .map(
+      (tile) => `
+        <div class="csdtp-live-stat">
+          <small>${escapeHtml(tile.label)}</small>
+          <strong>${escapeHtml(tile.value)}</strong>
+          ${tile.sub ? `<em>${escapeHtml(tile.sub)}</em>` : ""}
+        </div>
+      `,
+    )
+    .join("");
+
+  const spent = csdtpCompact(
+    m["disbursement.expenditure"],
+    CONFIG.CSDTP_CURRENCY,
+  );
+
+  const allocated = csdtpCompact(
+    m["disbursement.budget_allocated"],
+    CONFIG.CSDTP_CURRENCY,
+  );
+
+  const sold = csdtpCompact(m["mcc_capacity_use_percentage.total_litres_sold"]);
+
+  const storage = csdtpCompact(
+    m["mcc_capacity_use_percentage.total_mcc_storage_potential_litres"],
+  );
+
+  return `
+    ${head(
+      state.stale ? "MIS · STALE" : "MIS · LIVE",
+      state.updatedLabel,
+      state.stale ? "is-stale" : "",
+    )}
+
+    ${buildCsdtpBarRow(
+      "Budget utilisation",
+      m["disbursement.utilization_percent"],
+      `${spent} of ${allocated}`,
+    )}
+
+    ${buildCsdtpBarRow(
+      "MCC capacity use",
+      m["mcc_capacity_use_percentage.capacity_use_percent"],
+      `${sold} of ${storage} L sold`,
+    )}
+
+    <div class="csdtp-live-grid">${tiles}</div>
+  `;
+}
+
+/* Repaint the live block wherever it sits (safe to call any time). */
+function paintCsdtpLive() {
+  document.querySelectorAll("[data-csdtp-live]").forEach((node) => {
+    node.innerHTML = buildCsdtpLiveBlock();
+  });
+}
+
+async function refreshCsdtpLive() {
+  if (!CONFIG.CSDTP_API_CSV_URL) {
+    csdtpLive = { status: "off", metrics: {}, updatedLabel: "", stale: false };
+
+    paintCsdtpLive();
+
+    return;
+  }
+
+  try {
+    const rows = await getSheetRows(CONFIG.CSDTP_API_CSV_URL);
+
+    const metrics = {};
+
+    let updated = "";
+
+    rows.forEach((row) => {
+      const key = getRowValue(row, ["metric", "Metric"]);
+
+      if (!key) {
+        return;
+      }
+
+      metrics[key] = parseNumber(getRowValue(row, ["value", "Value"]));
+
+      updated = updated || getRowValue(row, ["updated", "Updated"]);
+    });
+
+    if (!Object.keys(metrics).length) {
+      throw new Error("API_CSDTP tab contains no metrics");
+    }
+
+    let updatedLabel = "";
+
+    let stale = false;
+
+    const syncedAt = new Date(updated);
+
+    if (!Number.isNaN(syncedAt.getTime())) {
+      stale =
+        (Date.now() - syncedAt.getTime()) / 60000 > CONFIG.CSDTP_STALE_MINUTES;
+
+      updatedLabel = syncedAt.toLocaleString([], {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    csdtpLive = { status: "ok", metrics, updatedLabel, stale };
+
+    console.log("✅ C-SDTP live metrics loaded:", Object.keys(metrics).length);
+  } catch (error) {
+    console.error("❌ C-SDTP LIVE METRICS ERROR:", error);
+
+    csdtpLive = { status: "error", metrics: {}, updatedLabel: "", stale: true };
+  }
+
+  paintCsdtpLive();
+}
+
+/* ============================================================
    20. AUTO REFRESH
    ============================================================ */
 
@@ -2671,6 +2947,8 @@ async function refreshDashboardData() {
     refreshStakeholders(),
 
     refreshDisbursements(),
+
+    refreshCsdtpLive(),
 
     refreshAnnouncements(),
   ]);
@@ -2727,6 +3005,8 @@ async function initializeDashboard() {
     refreshStakeholders(),
 
     refreshDisbursements(),
+
+    refreshCsdtpLive(),
 
     refreshAnnouncements(),
   ]);
