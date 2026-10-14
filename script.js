@@ -1539,7 +1539,7 @@ const statusRank = (row) => {
   return /ongoing/i.test(s) ? 0 : /completed/i.test(s) ? 2 : 1;
 };
 const sortedRows = [...rows].sort((a, b) => statusRank(a) - statusRank(b));
-    element.innerHTML = rows
+   element.innerHTML = sortedRows
       .map((row) => {
         const project =
           getRowValue(row, [
