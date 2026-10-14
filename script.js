@@ -1534,7 +1534,11 @@ async function refreshMilestones() {
 
       return;
     }
-
+const statusRank = (row) => {
+  const s = getRowValue(row, ["Status", "Status Label", "Phase", "Mission Status"]);
+  return /ongoing/i.test(s) ? 0 : /completed/i.test(s) ? 2 : 1;
+};
+const sortedRows = [...rows].sort((a, b) => statusRank(a) - statusRank(b));
     element.innerHTML = rows
       .map((row) => {
         const project =
