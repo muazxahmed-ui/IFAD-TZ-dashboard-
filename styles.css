@@ -410,7 +410,7 @@ header {
 .map-panel {
   grid-area: map;
 
-  min-height: 620px;
+  min-height: 310px;
 }
 
 .timeline-panel {
