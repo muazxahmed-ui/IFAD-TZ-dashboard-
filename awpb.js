@@ -1,5 +1,8 @@
 /* awpb.js - AWPB panel (replaces Portfolio Timeline) for the Project Portfolio Command Centre
-   Load AFTER script.js. Reads AWPB_CSV_URL / AWPB_COMPONENTS_CSV_URL / SYNC_MINUTES from CONFIG in script.js. */
+   Load AFTER script.js. Reads AWPB_CSV_URL / AWPB_COMPONENTS_CSV_URL / SYNC_MINUTES from CONFIG in script.js.
+
+   AWPB tab columns:  Project Code | FY | Quarter | Planned | Actual | Last Updated | Funds Received (optional)
+   "Funds Received" is read from the Annual row only; when it is blank the Funds position section stays hidden. */
 (function () {
   "use strict";
 
@@ -28,7 +31,7 @@
     COMP_URL = usable(cfg.AWPB_COMPONENTS_CSV_URL);
   var REFRESH_MS = (cfg.SYNC_MINUTES || 5) * 60 * 1000;
 
-  /* Fallback shown until the sheet loads (C-SDTP FY 2025/26, USD, June 2026 report) */
+  /* Fallback shown until the sheet loads (C-SDTP FY 2025/26, USD, from the revised AWPB and the progress report) */
   var state = {
     project: "csdtp",
     fy: null,
@@ -38,9 +41,10 @@
         key: "csdtp",
         fy: "2025/26",
         quarter: "Annual",
-        planned: 17156037,
-        actual: 1405777,
-        updated: "2026-06-30",
+        planned: 17203460,
+        actual: 3250000,
+        received: 7984197,
+        updated: "2026-10-14",
       },
     ],
     comps: [
@@ -48,22 +52,22 @@
         key: "csdtp",
         fy: "2025/26",
         name: "1. Climate-smart productivity & resilience",
-        planned: 5049418,
-        actual: 268600,
+        planned: 5049420,
+        actual: 487500,
       },
       {
         key: "csdtp",
         fy: "2025/26",
         name: "2. Inclusive value chains, investment & policy",
-        planned: 6201502,
-        actual: 92200,
+        planned: 6201500,
+        actual: 206050,
       },
       {
         key: "csdtp",
         fy: "2025/26",
         name: "3. Project planning & management",
-        planned: 5905117,
-        actual: 1044977,
+        planned: 5952540,
+        actual: 2556450,
       },
     ],
   };
@@ -79,6 +83,13 @@
   }
   function num(v) {
     return parseFloat(String(v).replace(/[^0-9.\-]/g, "")) || 0;
+  }
+  /* like num(), but a blank / non-numeric cell gives null instead of 0 */
+  function numOrNull(v) {
+    var t = String(v == null ? "" : v).replace(/[^0-9.\-]/g, "");
+    if (t === "" || t === "-" || t === ".") return null;
+    var n = parseFloat(t);
+    return isNaN(n) ? null : n;
   }
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
@@ -118,6 +129,9 @@
                 quarter: getRowValue(o, ["Quarter"]),
                 planned: num(getRowValue(o, ["Planned"])),
                 actual: num(getRowValue(o, ["Actual"])),
+                received: numOrNull(
+                  getRowValue(o, ["Funds Received", "FundsReceived"]),
+                ),
                 updated: getRowValue(o, ["Last Updated"]),
               };
             })
@@ -210,6 +224,7 @@
     return {
       planned: annual ? annual.planned : sum(qs, "planned"),
       actual: annual ? annual.actual : sum(qs, "actual"),
+      received: annual ? annual.received : null,
       qs: qs,
       warn: warn,
       updated: r
@@ -222,6 +237,24 @@
         return x.key === k && x.fy === fy;
       }),
     };
+  }
+
+  /* One progress row for the Funds position section.
+     Re-uses the component-bar classes (aw-c / aw-ct / aw-track / aw-fill) so no new CSS is needed. */
+  function fundsRow(label, detail, ratio) {
+    var p = isFinite(ratio) ? ratio : 0;
+    return (
+      '<div class="aw-c"><div class="aw-ct"><span>' +
+      esc(label) +
+      "</span><em>" +
+      esc(detail) +
+      " &middot; " +
+      (p * 100).toFixed(1) +
+      "%</em></div>" +
+      '<div class="aw-track"><div class="aw-fill" style="width:' +
+      (Math.min(Math.max(p, 0), 1) * 100).toFixed(1) +
+      '%"></div></div></div>'
+    );
   }
 
   /* ---------- render ---------- */
@@ -302,6 +335,30 @@
       '<div class="aw-stat"><span>Year</span><b>FY ' +
       esc(fy) +
       "</b></div></div></div>";
+
+    /* Funds position: shown only when the Annual row has a Funds Received value */
+    if (s.received != null && s.received > 0) {
+      var bal = s.received - s.actual;
+      h +=
+        '<div><div class="aw-sec">Funds position &middot; received vs spent</div>' +
+        fundsRow(
+          "Funds received vs AWPB",
+          money(s.received) + " / " + money(s.planned),
+          s.planned ? s.received / s.planned : 0,
+        ) +
+        fundsRow(
+          "Spent vs funds received",
+          money(s.actual) + " / " + money(s.received),
+          s.actual / s.received,
+        ) +
+        '<div class="aw-note">' +
+        (bal >= 0
+          ? "Unspent funds received: "
+          : "Spent beyond funds received: ") +
+        "<b>" +
+        money(Math.abs(bal)) +
+        "</b></div></div>";
+    }
 
     if (s.qs.length) {
       var mx =
