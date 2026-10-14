@@ -3020,3 +3020,22 @@ header {
   .dv-top{flex-direction:column}
   .dv-tiles.four{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+/* ===== Layout: Disbursement beside AWPB, Timetable underneath ===== */
+@media (min-width: 1181px) {
+  .dashboard-grid {
+    grid-template-areas:
+      "map timeline disbursements"
+      "map stakeholders missions"
+      "announcements announcements announcements";
+  }
+}
+
+@media (max-width: 1180px) {
+  .dashboard-grid {
+    grid-template-areas:
+      "map map"
+      "timeline disbursements"
+      "stakeholders missions"
+      "announcements announcements";
+  }
+}
