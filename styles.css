@@ -3053,3 +3053,24 @@ header {
   padding-right: 24px;
   background: #fbfcfd url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23475569' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;
 }
+#tanzaniaMap { height: 190px !important; }   /* half of your current value */
+
+#projectLegend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; }
+#projectLegend .legend-text small,
+#projectLegend .legend-text p { display: none; }
+
+.costab-card { padding: 10px 12px; }
+.costab-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.costab-head h3 { font-size: 12px; color: #0b6e4f; margin: 0; }
+.costab-head select { font-size: 10px; padding: 2px 6px; border: 1px solid #d1d5db; border-radius: 6px; }
+.costab-total { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
+.costab-total > div { border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 8px; }
+.costab-total small { display: block; font-size: 9px; color: #6b7280; }
+.costab-total strong { font-size: 15px; color: #0b6e4f; }
+.costab-title { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; margin: 8px 0 4px; }
+.costab-num { width: 16px; height: 16px; border-radius: 50%; background: #0b6e4f; color: #fff; font-size: 9px; display: flex; align-items: center; justify-content: center; }
+.costab-row { margin-bottom: 5px; }
+.costab-lbl { display: flex; justify-content: space-between; gap: 8px; font-size: 9.5px; color: #374151; }
+.costab-lbl b { color: #0b6e4f; white-space: nowrap; }
+.costab-bar { height: 5px; background: #e5e7eb; border-radius: 3px; overflow: hidden; margin-top: 2px; }
+.costab-bar i { display: block; height: 100%; border-radius: 3px; }
