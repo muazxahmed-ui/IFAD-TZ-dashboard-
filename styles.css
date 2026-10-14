@@ -2128,7 +2128,6 @@ header {
   }
 }
 
-
 /* ============================================================
    C-SDTP LIVE METRICS — inside the C-SDTP project card
    ============================================================ */
@@ -2331,4 +2330,637 @@ header {
   color: var(--muted, #64748b);
 
   white-space: nowrap;
+}
+/* ===== AWPB panel - light theme matching the rest of the dashboard (append to styles.css) ===== */
+.panel.awpb-host {
+  display: flex;
+  flex-direction: column;
+}
+#awpb-panel {
+  --act: #4f7942;
+  --line: #e4eaf0;
+  --soft: #f8fafb;
+  --mut: #697586;
+  --txt: #172033;
+  --track: #e5ece9;
+  --plan: #d5dee6;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--txt);
+  font-family: Inter, sans-serif;
+  min-width: 0;
+}
+#awpb-panel * {
+  box-sizing: border-box;
+}
+#awpb-panel .aw-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+#awpb-panel .aw-head h2 {
+  margin: 0;
+}
+#awpb-panel .aw-sub {
+  font-size: 9px;
+  color: var(--mut);
+}
+#awpb-panel .aw-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+#awpb-panel button {
+  font: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #d6dee5;
+  background: #fbfcfd;
+  color: var(--mut);
+  padding: 5px 11px;
+  border-radius: 999px;
+  transition: 0.15s;
+}
+#awpb-panel button:hover {
+  color: var(--txt);
+  border-color: #c3ced7;
+}
+#awpb-panel button.on {
+  background: color-mix(in srgb, var(--act) 14%, #fff);
+  border-color: var(--act);
+  color: var(--txt);
+}
+#awpb-panel .aw-body {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+#awpb-panel .aw-gauge {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  flex: 0 0 auto;
+}
+#awpb-panel .aw-gauge svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+#awpb-panel .aw-gauge .c {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#awpb-panel .aw-pct {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.4px;
+}
+#awpb-panel .aw-lbl {
+  font-size: 9px;
+  color: var(--mut);
+  margin-top: 3px;
+}
+#awpb-panel .aw-stats {
+  flex: 1 1 160px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+#awpb-panel .aw-stat {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 9px 11px;
+}
+#awpb-panel .aw-stat span {
+  display: block;
+  font-size: 8px;
+  color: #64748b;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+#awpb-panel .aw-stat b {
+  display: block;
+  font-size: 15px;
+  letter-spacing: -0.2px;
+  color: var(--txt);
+}
+#awpb-panel .aw-sec {
+  font-size: 9px;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.45px;
+  margin-bottom: 7px;
+}
+#awpb-panel .aw-q {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  height: 92px;
+}
+#awpb-panel .aw-qc {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+}
+#awpb-panel .aw-bars {
+  position: relative;
+  width: 100%;
+  max-width: 46px;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+}
+#awpb-panel .aw-bp {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--plan);
+  border-radius: 5px 5px 0 0;
+}
+#awpb-panel .aw-ba {
+  position: absolute;
+  bottom: 0;
+  left: 18%;
+  right: 18%;
+  background: var(--act);
+  border-radius: 4px 4px 0 0;
+}
+#awpb-panel .aw-qc small {
+  font-size: 8px;
+  color: var(--mut);
+}
+#awpb-panel .aw-c {
+  margin-bottom: 8px;
+}
+#awpb-panel .aw-ct {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  gap: 8px;
+}
+#awpb-panel .aw-ct em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--mut);
+  white-space: nowrap;
+}
+#awpb-panel .aw-track {
+  height: 5px;
+  background: var(--track);
+  border-radius: 99px;
+  overflow: hidden;
+}
+#awpb-panel .aw-fill {
+  height: 100%;
+  background: var(--act);
+  border-radius: 99px;
+}
+#awpb-panel .aw-note {
+  font-size: 9px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  color: var(--mut);
+}
+#awpb-panel .aw-note.warn {
+  background: #fff7dc;
+  border-color: #f3dc8a;
+  color: #986b00;
+}
+#awpb-panel .aw-empty {
+  padding: 26px 8px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 11px;
+}
+/* ===== Stakeholders panel - compact logo wall + spotlight (append to styles.css) ===== */
+#stakeholders.populated {
+  display: block;
+  border: none;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  color: inherit;
+}
+.stakeholders-panel {
+  min-height: 0;
+}
+.sh-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #e4eaf0;
+  border-top: 3px solid var(--pc, #0b6e4f);
+  border-radius: 11px;
+  padding: 11px 12px;
+  background: #fff;
+}
+.sh-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sh-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sh-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--pc);
+}
+.sh-name h3 {
+  font-size: 13px;
+  color: #172033;
+  letter-spacing: -0.2px;
+}
+.sh-count {
+  font-size: 9px;
+  color: #697586;
+}
+.sh-pills {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.sh-pill {
+  font: inherit;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #d6dee5;
+  background: #fbfcfd;
+  color: #697586;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+.sh-pill.on {
+  background: color-mix(in srgb, var(--pc) 14%, #fff);
+  border-color: var(--pc);
+  color: #172033;
+}
+.sh-mix {
+  display: flex;
+  height: 6px;
+  width: 200px;
+  max-width: 100%;
+  border-radius: 99px;
+  overflow: hidden;
+  background: #e5ece9;
+}
+.sh-mix i {
+  display: block;
+  height: 100%;
+}
+.sh-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(250px, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+.sh-wall {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  max-height: 210px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+}
+.sh-gl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.45px;
+  color: #475569;
+  margin-bottom: 4px;
+}
+.sh-gl i {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--cc);
+}
+.sh-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.sh-tile {
+  width: 60px;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 4px 2px;
+  border-radius: 9px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: inherit;
+  transition: 0.15s;
+}
+.sh-tile:hover {
+  background: #f4f7f9;
+}
+.sh-tile.on {
+  border-color: var(--pc);
+  background: color-mix(in srgb, var(--pc) 10%, #fff);
+}
+.sh-tile small {
+  font-size: 7.5px;
+  line-height: 1.2;
+  color: #475569;
+  text-align: center;
+  max-height: 18px;
+  overflow: hidden;
+  width: 100%;
+}
+.sh-av {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--cc, #64748b);
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+.sh-av.big {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+.sh-av img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+  padding: 4px;
+}
+.sh-spot {
+  background: #f8fafb;
+  border: 1px solid #e4eaf0;
+  border-radius: 10px;
+  padding: 12px;
+  min-height: 150px;
+}
+.sh-spot-in {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  animation: shFade 0.35s ease;
+}
+@keyframes shFade {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sh-spot-top {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.sh-spot-id {
+  min-width: 0;
+}
+.sh-spot-id strong {
+  display: block;
+  font-size: 12px;
+  color: #172033;
+  line-height: 1.25;
+}
+.sh-spot-id span {
+  display: block;
+  font-size: 9px;
+  color: #697586;
+  margin-top: 2px;
+  line-height: 1.3;
+}
+.sh-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.sh-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8px;
+  font-weight: 700;
+  background: #eef2f6;
+  color: #475569;
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+.sh-chip i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cc);
+}
+.sh-chip small {
+  font-size: 7px;
+  font-weight: 600;
+  color: #7b8794;
+}
+.sh-chip.st-active,
+.sh-chip.st-completed {
+  background: #e8f7ef;
+  color: #087443;
+}
+.sh-chip.st-pending,
+.sh-chip.st-in-progress,
+.sh-chip.st-planned {
+  background: #fff7dc;
+  color: #986b00;
+}
+.sh-next {
+  font-size: 9px;
+  line-height: 1.35;
+  color: #475569;
+}
+.sh-next span {
+  display: block;
+  font-size: 7.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #334155;
+  margin-bottom: 2px;
+}
+.sh-next strong {
+  font-weight: 600;
+  color: #172033;
+}
+.sh-counter {
+  font-style: normal;
+  font-size: 8px;
+  color: #94a3b8;
+  text-align: right;
+}
+@media (max-width: 900px) {
+  .sh-main {
+    grid-template-columns: 1fr;
+  }
+  .sh-wall {
+    max-height: none;
+  }
+}
+/* ===== Layout update (append at the VERY END of styles.css, after stakeholders.css) =====
+   Row 1: map | AWPB | Upcoming Missions
+   Row 2: map | Stakeholders (under AWPB) | Disbursement (under Missions)  */
+.stakeholders-panel,
+.disbursement-panel {
+  min-height: 0;
+}
+.sh-wall {
+  position: relative;
+}
+
+@media (min-width: 1181px) {
+  .dashboard-grid {
+    grid-template-areas:
+      "map timeline missions"
+      "map stakeholders disbursements"
+      "announcements announcements announcements";
+  }
+
+  /* ---- Stakeholders: compact, same scale as AWPB ---- */
+  .stakeholders-heading {
+    margin-bottom: 8px;
+  }
+  .stakeholders-heading p {
+    display: none;
+  }
+  .sh-card {
+    padding: 9px 10px;
+    gap: 8px;
+  }
+  .sh-top {
+    gap: 5px 10px;
+  }
+  .sh-name h3 {
+    font-size: 12px;
+  }
+  .sh-pill {
+    font-size: 8px;
+    padding: 2px 8px;
+  }
+  .sh-mix {
+    order: 3;
+    flex: 1 1 100%;
+    width: auto;
+    height: 5px;
+  }
+  .sh-main {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .sh-wall {
+    max-height: 92px;
+    gap: 6px;
+  }
+  .sh-tile {
+    width: 54px;
+    padding: 3px 1px;
+  }
+  .sh-av {
+    width: 30px;
+    height: 30px;
+    font-size: 9px;
+    border-radius: 9px;
+  }
+  .sh-av.big {
+    width: 38px;
+    height: 38px;
+    font-size: 11px;
+    border-radius: 10px;
+  }
+  .sh-spot {
+    padding: 9px 10px;
+    min-height: 0;
+  }
+  .sh-spot-in {
+    gap: 6px;
+  }
+  .sh-spot-id strong {
+    font-size: 11px;
+  }
+  .sh-next {
+    font-size: 8.5px;
+  }
+
+  /* ---- Disbursement: compact ---- */
+  .disbursement-heading {
+    margin-bottom: 6px;
+    gap: 10px;
+  }
+  .disbursement-heading p {
+    display: none;
+  }
+  .disbursement-layout {
+    grid-template-columns: 130px minmax(0, 1fr);
+    gap: 12px;
+  }
+  .disbursement-chart-box {
+    height: 150px;
+  }
+  .disbursement-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .disb-stat {
+    padding: 7px 8px;
+  }
+  .disb-stat span {
+    font-size: 7.5px;
+    margin-bottom: 3px;
+  }
+  .disb-stat strong {
+    font-size: 12px;
+  }
 }
