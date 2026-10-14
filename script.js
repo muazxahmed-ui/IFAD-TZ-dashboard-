@@ -39,6 +39,8 @@ const CONFIG = {
   ANNOUNCEMENTS_CSV_URL:
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vRutNgZhOKTDMh98xxopabd4f-Eo683y-PHrEP-HvEA2DKqe8jCCNqElgH8zZK81A9zbkn7eHX_7sUK/pub?gid=1917123801&single=true&output=csv",
 
+     COSTAB_CSV_URL:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRutNgZhOKTDMh98xxopabd4f-Eo683y-PHrEP-HvEA2DKqe8jCCNqElgH8zZK81A9zbkn7eHX_7sUK/pub?gid=1865399191&single=true&output=csv",
   /*
      C-SDTP LIVE METRICS (from the IT API, via Apps Script -> Google Sheet).
      Paste the published CSV link of the API_CSDTP tab here.
@@ -2772,7 +2774,150 @@ async function refreshCsdtpLive() {
 
   paintCsdtpLive();
 }
+/* ============================================================
+   19C. COSTAB — PROJECT COST AND FINANCING
+   Tab layout: Project | Group | Item | Amount_USDm
+   Groups used: Summary, Component, Financier
+   ============================================================ */
 
+let costabRows = [];
+
+function costabKey(name) {
+  const override = getProjectOverride(name);
+  return normalizeProjectKey(override?.displayName || name);
+}
+
+function costabDisplayName(name) {
+  return getProjectOverride(name)?.displayName || name;
+}
+
+function costabMoney(value) {
+  return `$${Number(value || 0).toFixed(2)}M`;
+}
+
+async function refreshCostab() {
+  const element = document.getElementById("costab-body");
+
+  if (!element) {
+    return;
+  }
+
+  try {
+    const rows = await getSheetRows(CONFIG.COSTAB_CSV_URL);
+
+    console.log("💵 COSTAB DATA:", rows);
+
+    costabRows = rows
+      .map((row) => ({
+        project: getRowValue(row, ["Project", "Project Name", "Project Code"]),
+        group: getRowValue(row, ["Group", "Section", "Category"]),
+        item: getRowValue(row, ["Item", "Label", "Name"]),
+        amount: parseNumber(
+          getRowValue(row, ["Amount_USDm", "Amount USDm", "Amount", "Value"]),
+        ),
+      }))
+      .filter((row) => row.project && row.group && row.item);
+
+    const select = document.getElementById("costabProjectSelect");
+
+    const projects = [
+      ...new Set(costabRows.map((row) => costabDisplayName(row.project))),
+    ];
+
+    const previous = select?.value;
+
+    if (select) {
+      select.innerHTML = projects
+        .map(
+          (project) =>
+            `<option value="${escapeHtml(project)}">${escapeHtml(project)}</option>`,
+        )
+        .join("");
+
+      select.value = projects.includes(previous)
+        ? previous
+        : projects.includes("C-SDTP")
+          ? "C-SDTP"
+          : projects[0] || "";
+
+      select.onchange = function () {
+        renderCostab(this.value);
+      };
+    }
+
+    renderCostab(select?.value || projects[0] || "");
+
+    console.log("✅ COSTAB loaded:", costabRows.length);
+  } catch (error) {
+    console.error("❌ COSTAB ERROR:", error);
+
+    element.innerHTML = `
+      <div class="empty-state">COSTAB data could not be loaded.</div>
+    `;
+  }
+}
+
+function costabBars(rows, total, color) {
+  return rows
+    .map((row) => {
+      const percent = total ? (row.amount / total) * 100 : 0;
+
+      return `
+        <div class="costab-row">
+          <div class="costab-lbl">
+            <span>${escapeHtml(row.item)}</span>
+            <b>${costabMoney(row.amount)} · ${percent.toFixed(1)}%</b>
+          </div>
+          <div class="costab-bar">
+            <i style="width:${Math.min(100, percent)}%;background:${escapeHtml(color)}"></i>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function renderCostab(projectName) {
+  const element = document.getElementById("costab-body");
+
+  if (!element) {
+    return;
+  }
+
+  const key = costabKey(projectName);
+
+  const rows = costabRows.filter((row) => costabKey(row.project) === key);
+
+  if (!rows.length) {
+    element.innerHTML = `
+      <div class="empty-state">COSTAB not yet available for this project.</div>
+    `;
+
+    return;
+  }
+
+  const pick = (group, item) =>
+    rows.find((row) => row.group === group && row.item === item)?.amount || 0;
+
+  const total = pick("Summary", "Total");
+  const baseline = pick("Summary", "Baseline");
+  const contingencies = pick("Summary", "Contingencies");
+  const color = getProjectColor(projectName);
+
+  element.innerHTML = `
+    <div class="costab-total">
+      <div><small>Total cost</small><strong>${costabMoney(total)}</strong></div>
+      <div><small>Baseline</small><strong>${costabMoney(baseline)}</strong></div>
+      <div><small>Contingencies</small><strong>${costabMoney(contingencies)}</strong></div>
+    </div>
+
+    <div class="costab-title"><span class="costab-num">1</span>Cost by component</div>
+    ${costabBars(rows.filter((row) => row.group === "Component"), baseline, color)}
+
+    <div class="costab-title"><span class="costab-num">2</span>Financing by source</div>
+    ${costabBars(rows.filter((row) => row.group === "Financier"), total, color)}
+  `;
+}
 /* ============================================================
    20. AUTO REFRESH
    ============================================================ */
