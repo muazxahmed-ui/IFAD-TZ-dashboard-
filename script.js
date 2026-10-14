@@ -26,9 +26,10 @@ const CONFIG = {
   MILESTONES_CSV_URL:
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vRutNgZhOKTDMh98xxopabd4f-Eo683y-PHrEP-HvEA2DKqe8jCCNqElgH8zZK81A9zbkn7eHX_7sUK/pub?gid=1467867682&single=true&output=csv",
 
-  TIMELINE_CSV_URL:
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRutNgZhOKTDMh98xxopabd4f-Eo683y-PHrEP-HvEA2DKqe8jCCNqElgH8zZK81A9zbkn7eHX_7sUK/pub?gid=996381250&single=true&output=csv",
-
+  AWPB_CSV_URL:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRutNgZhOKTDMh98xxopabd4f-Eo683y-PHrEP-HvEA2DKqe8jCCNqElgH8zZK81A9zbkn7eHX_7sUK/pub?gid=1715315345&single=true&output=csv",
+  AWPB_COMPONENTS_CSV_URL:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRutNgZhOKTDMh98xxopabd4f-Eo683y-PHrEP-HvEA2DKqe8jCCNqElgH8zZK81A9zbkn7eHX_7sUK/pub?gid=170198674&single=true&output=csv",
   STAKEHOLDERS_CSV_URL:
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vRutNgZhOKTDMh98xxopabd4f-Eo683y-PHrEP-HvEA2DKqe8jCCNqElgH8zZK81A9zbkn7eHX_7sUK/pub?gid=793167100&single=true&output=csv",
 
@@ -1499,152 +1500,7 @@ function renderLegend() {
 }
 
 /* ============================================================
-   15. PORTFOLIO TIMELINE
-   ============================================================ */
-
-async function refreshTimeline() {
-  const element = document.getElementById("timeline");
-
-  if (!element) {
-    return;
-  }
-
-  try {
-    const rows = await getSheetRows(CONFIG.TIMELINE_CSV_URL);
-
-    console.log("📅 TIMELINE DATA:", rows);
-
-    console.log(
-      "📅 TIMELINE HEADERS:",
-      rows.length ? Object.keys(rows[0]) : [],
-    );
-
-    if (!rows.length) {
-      element.innerHTML = `
-        <div class="empty-state">
-          No timeline data available.
-        </div>
-      `;
-
-      return;
-    }
-
-    element.innerHTML = rows
-      .map((row) => {
-        const project =
-          getRowValue(row, [
-            "Project",
-            "Project Name",
-            "ProjectName",
-            "Programme",
-            "Program",
-            "Project Short Name",
-          ]) || "Portfolio";
-
-        const title =
-          getRowValue(row, [
-            "Milestone",
-            "Milestone Name",
-            "Activity",
-            "Activity Name",
-            "Event",
-            "Event Name",
-            "Title",
-            "Task",
-            "Description",
-            "Name",
-          ]) || "Portfolio activity";
-
-        const date = getRowValue(row, [
-          "Date",
-          "Milestone Date",
-          "Event Date",
-          "Start Date",
-          "Target Date",
-          "Deadline",
-          "Due Date",
-        ]);
-
-        const status = getRowValue(row, [
-          "Status",
-          "Status Label",
-          "Phase",
-          "Progress Status",
-        ]);
-
-        const color = getProjectColor(project);
-
-        return `
-
-            <div
-              class="timeline-item"
-              style="
-                --timeline-color:
-                ${escapeHtml(color)}
-              "
-            >
-
-              <span class="timeline-project">
-                ${escapeHtml(project)}
-              </span>
-
-
-              <div class="timeline-body">
-
-                <strong>
-                  ${escapeHtml(title)}
-                </strong>
-
-
-                <div class="timeline-meta">
-
-                  ${
-                    date
-                      ? `
-                        <span>
-                          📅
-                          ${escapeHtml(date)}
-                        </span>
-                      `
-                      : ""
-                  }
-
-
-                  ${
-                    status
-                      ? `
-                        <span>
-                          ${escapeHtml(status)}
-                        </span>
-                      `
-                      : ""
-                  }
-
-                </div>
-
-              </div>
-
-            </div>
-
-          `;
-      })
-      .join("");
-
-    element.classList.add("populated");
-
-    console.log("✅ Timeline loaded:", rows.length);
-  } catch (error) {
-    console.error("❌ TIMELINE ERROR:", error);
-
-    element.innerHTML = `
-
-      <div class="empty-state">
-        Timeline data could not be loaded.
-      </div>
-
-    `;
-  }
-}
+  
 
 /* ============================================================
    16. UPCOMING MISSIONS
@@ -2940,8 +2796,6 @@ async function refreshDashboardData() {
 
     refreshProjects(),
 
-    refreshTimeline(),
-
     refreshMilestones(),
 
     refreshStakeholders(),
@@ -2997,8 +2851,6 @@ async function initializeDashboard() {
     refreshKPIs(),
 
     refreshProjects(),
-
-    refreshTimeline(),
 
     refreshMilestones(),
 
