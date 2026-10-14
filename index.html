@@ -174,7 +174,6 @@
 
         <div class="panel timeline-panel awpb-host">
           <div id="awpb-panel"></div>
-          <div id="awpb-funds"></div>
         </div>
 
         <!-- UPCOMING MISSIONS -->
@@ -208,86 +207,10 @@
           <div id="stakeholders"></div>
         </div>
 
-        <!-- DISBURSEMENTS -->
+        <!-- DISBURSEMENT & CONTRACTS (drawn entirely by disbursements.js) -->
 
         <div class="panel disbursement-panel">
           <div id="disbursement-panel"></div>
-          <div class="disbursement-heading">
-            <div>
-              <h2>💰 Disbursement Overview</h2>
-
-              <p>IFAD financing utilization across the active portfolio</p>
-            </div>
-
-            <select
-              id="disbursementProjectSelect"
-              aria-label="Select disbursement project"
-            >
-              <option value="PORTFOLIO">Portfolio</option>
-            </select>
-          </div>
-
-          <div class="disbursement-layout">
-            <div class="disbursement-chart-box">
-              <canvas id="disbursementChart"> </canvas>
-            </div>
-
-            <div class="disbursement-summary">
-              <div class="disb-stat">
-                <span> Current IFAD Amount </span>
-
-                <strong id="disb-current"> — </strong>
-              </div>
-
-              <div class="disb-stat">
-                <span> Cumulative Disbursed </span>
-
-                <strong id="disb-cumulative"> — </strong>
-              </div>
-
-              <div class="disb-stat">
-                <span> Remaining Balance </span>
-
-                <strong id="disb-remaining"> — </strong>
-              </div>
-
-              <div class="disb-stat">
-                <span> Disbursement Rate </span>
-
-                <strong id="disb-rate"> — </strong>
-              </div>
-
-              <div class="disb-stat">
-                <span> Yearly Envelope </span>
-
-                <strong id="disb-envelope"> — </strong>
-              </div>
-
-              <div class="disb-stat">
-                <span> Disbursed YTD </span>
-
-                <strong id="disb-ytd"> — </strong>
-              </div>
-
-              <div class="disb-stat">
-                <span> Open Contracts </span>
-
-                <strong id="disb-contracts"> — </strong>
-              </div>
-
-              <div class="disb-stat">
-                <span> Contracts Value </span>
-
-                <strong id="disb-contract-value"> — </strong>
-              </div>
-
-              <div class="disb-stat">
-                <span> Planned Contract Payments </span>
-
-                <strong id="disb-planned"> — </strong>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- ANNOUNCEMENTS -->
@@ -303,7 +226,7 @@
     </div>
 
     <script src="script.js"></script>
-    <script src="awpb.js"></script>
+    <script src="awpb.js?v=2"></script>
     <script src="stakeholders.js"></script>
     <script src="disbursements.js?v=1"></script>
   </body>
