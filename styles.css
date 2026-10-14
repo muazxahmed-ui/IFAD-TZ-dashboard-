@@ -2964,3 +2964,11 @@ header {
     font-size: 12px;
   }
 }
+.awpb-funds{margin-top:12px;padding:12px 14px;border-radius:10px;background:#f4f8f6;border:1px solid #d6e4dd;font-family:inherit}
+.awpb-funds h4{margin:0 0 8px;font-size:.95rem;color:var(--accent,#0b6e4f);letter-spacing:.02em}
+.awpb-funds .af-row{margin:7px 0}
+.awpb-funds .af-top{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:3px}
+.awpb-funds .af-top b{font-variant-numeric:tabular-nums}
+.awpb-funds .af-bar{height:8px;border-radius:5px;background:#dfe9e4;overflow:hidden}
+.awpb-funds .af-fill{height:100%;background:var(--accent,#0b6e4f);border-radius:5px;transition:width .6s}
+.awpb-funds .af-note{font-size:.75rem;color:#5b6b64;margin-top:8px}
