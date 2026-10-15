@@ -1,0 +1,81 @@
+# Save as:  .github/workflows/gallery.yml
+# Runs whenever files in assets/projects/ change. It
+#   1. shrinks any photo larger than 1600 px (keeps the TV fast)
+#   2. rebuilds assets/projects/gallery.json (the list the dashboard reads)
+name: Update dashboard gallery
+
+on:
+  push:
+    paths:
+      - "assets/projects/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gallery
+  cancel-in-progress: false
+
+jobs:
+  gallery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
+      - name: Shrink large photos
+        run: |
+          find assets/projects -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) -print0 |
+          while IFS= read -r -d '' f; do
+            w=$(identify -format '%w' "$f[0]")
+            h=$(identify -format '%h' "$f[0]")
+            if [ "$w" -gt 1600 ] || [ "$h" -gt 1600 ]; then
+              echo "Shrinking $f (${w}x${h})"
+              mogrify -auto-orient -strip -resize '1600x1600>' -quality 82 "$f"
+            fi
+          done
+
+      - name: Build gallery.json
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+
+          ROOT = "assets/projects"
+          EXT = (".jpg", ".jpeg", ".png", ".webp")
+          # Camera-style names (_P7A1997, DJI_0927, IMG_1234, 12.jpg) get no caption
+          CAMERA = re.compile(r"^(_?[A-Z0-9]{3,4}\d{4}|DJI_\d+|IMG[_-]?\d+|DSC[_-]?\d+|PXL_.*|\d+)$", re.I)
+
+          def natural(s):
+              return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", s)]
+
+          out = {}
+          for proj in sorted(os.listdir(ROOT)):
+              d = os.path.join(ROOT, proj)
+              if not os.path.isdir(d):
+                  continue
+              items = []
+              for f in sorted(os.listdir(d), key=natural):
+                  stem, ext = os.path.splitext(f)
+                  if ext.lower() not in EXT:
+                      continue
+                  if CAMERA.match(stem):
+                      cap = ""
+                  else:
+                      cap = re.sub(r"^\d+[\s._-]+", "", stem).replace("_", " ").strip()
+                  items.append({"src": f"{ROOT}/{proj}/{f}", "caption": cap})
+              out[proj.lower()] = items
+
+          with open(f"{ROOT}/gallery.json", "w") as fh:
+              json.dump(out, fh, indent=2)
+          print(json.dumps({k: len(v) for k, v in out.items()}))
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A assets/projects
+          git diff --cached --quiet || (git commit -m "Update dashboard gallery [skip ci]" && git push)
