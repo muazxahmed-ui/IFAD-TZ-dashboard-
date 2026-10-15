@@ -1,11 +1,13 @@
 /* ============================================================
-   project-slideshow.js
-   Tagged image galleries on the Project Portfolio cards.
+   project-slideshow.js  (v4 - auto-syncs with the photo folders)
 
-   - BBT and TFSRP-H (design stage / 0% progress): gallery stays on.
-   - C-SDTP and AFDP (active): gallery alternates with the live stats.
-   - Once a design-stage project starts (progress > 0 and no longer
-     "Design Stage"), it switches to the alternating mode by itself.
+   Photos are read from  assets/projects/gallery.json , which a GitHub
+   Action rebuilds every time files change in assets/projects/.
+   Add a photo to a project folder, commit, and it appears on the
+   dashboard on its own (the TV re-checks every 10 minutes).
+
+   If gallery.json is missing or a project has no entries, the script looks
+   for numbered files in the folder (1.jpg, 2.JPG, 3.png ...) in any case.
 
    Binds to:  #portfolioGrid .project-card   (built by script.js)
    Needs:     project-slideshow.css
@@ -14,51 +16,36 @@
 (function () {
   "use strict";
 
-  /* ----------------------------------------------------------
-     CONFIG — edit image paths / captions here
-     ---------------------------------------------------------- */
   const CONFIG = {
     interval: 5000, // ms each image is shown
     stagger: 1500, // offset between cards so they don't all change together
     galleryMs: 20000, // active projects: how long the gallery shows
     statsMs: 12000, // active projects: how long the stats show
+    manifestUrl: "assets/projects/gallery.json",
+    // Fallback when gallery.json is not available: look for 1, 2, 3 ... in each folder
+    maxNumbered: 20,
+    extensions: ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG", "webp"],
+    manifestRefreshMs: 10 * 60 * 1000, // re-check for new photos every 10 min
 
+    /* Folder name = project code in lower case: c-sdtp, afdp, bbt, tfsrp-h
+       enabled: false  -> no gallery on that card (leave out or set true to show it) */
     projects: {
       "C-SDTP": {
+        enabled: false, // gallery OFF: the C-SDTP card keeps its live stats only
         name: "Climate-Smart Smallholder Dairy",
         color: "#4f7942",
-        images: [
-          { src: "assets/projects/c-sdtp/1.jpg", caption: "Smallholder dairy farmers" },
-          { src: "assets/projects/c-sdtp/2.jpg", caption: "Milk collection centres" },
-          { src: "assets/projects/c-sdtp/3.jpg", caption: "Women and youth in dairy" },
-        ],
       },
       AFDP: {
         name: "Agriculture & Fisheries Development",
         color: "#f7c948",
-        images: [
-          { src: "assets/projects/afdp/1.jpg", caption: "Crop and seed production" },
-          { src: "assets/projects/afdp/2.jpg", caption: "Fisheries and aquaculture" },
-          { src: "assets/projects/afdp/3.jpg", caption: "Value addition" },
-        ],
       },
       BBT: {
         name: "Building a Better Tomorrow – Coffee",
         color: "#ef7d2d",
-        images: [
-          { src: "assets/projects/bbt/1.jpg", caption: "Coffee farmers" },
-          { src: "assets/projects/bbt/2.jpg", caption: "Coffee processing" },
-          { src: "assets/projects/bbt/3.jpg", caption: "Smallholder cooperatives" },
-        ],
       },
       "TFSRP-H": {
         name: "Food Systems Resilience – Horticulture",
         color: "#3b82f6",
-        images: [
-          { src: "assets/projects/tfsrp-h/1.jpg", caption: "Horticulture production" },
-          { src: "assets/projects/tfsrp-h/2.jpg", caption: "Market access" },
-          { src: "assets/projects/tfsrp-h/3.jpg", caption: "Climate-resilient farming" },
-        ],
       },
     },
   };
@@ -82,6 +69,59 @@
   const slug = (text) => String(text || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
   /* ----------------------------------------------------------
+     MANIFEST (auto-generated list of photos per project folder)
+     ---------------------------------------------------------- */
+  let manifest = null;
+  let ready = false;
+
+  async function loadManifest() {
+    try {
+      const res = await fetch(`${CONFIG.manifestUrl}?t=${Date.now()}`, { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      manifest = await res.json();
+    } catch (error) {
+      console.warn("project-slideshow: gallery.json not available, looking for numbered files instead.", error);
+    }
+  }
+
+  function canLoad(src) {
+    return new Promise((resolve) => {
+      const probe = new Image();
+      probe.onload = () => resolve(true);
+      probe.onerror = () => resolve(false);
+      probe.src = encodeURI(src);
+    });
+  }
+
+  /* No gallery.json: find 1.jpg, 2.JPG, 3.png ... (any case / extension) until a number is missing */
+  async function discover(code) {
+    const folder = `assets/projects/${code.toLowerCase()}`;
+    const found = [];
+
+    for (let n = 1; n <= CONFIG.maxNumbered; n++) {
+      let hit = null;
+
+      for (const ext of CONFIG.extensions) {
+        const src = `${folder}/${n}.${ext}`;
+        if (await canLoad(src)) {
+          hit = src;
+          break;
+        }
+      }
+
+      if (!hit) break;
+      found.push({ src: hit, caption: "" });
+    }
+
+    return found;
+  }
+
+  async function imagesFor(code) {
+    const list = manifest && manifest[code.toLowerCase()];
+    return Array.isArray(list) && list.length ? list : discover(code);
+  }
+
+  /* ----------------------------------------------------------
      CARD HELPERS
      ---------------------------------------------------------- */
   function getCode(card) {
@@ -103,9 +143,8 @@
   /* ----------------------------------------------------------
      BUILD ONE GALLERY
      ---------------------------------------------------------- */
-  function buildOverlay(card, code, cfg, delay) {
+  async function buildOverlay(card, code, cfg, delay) {
     const color = getComputedStyle(card).borderTopColor || cfg.color;
-
     const overlay = document.createElement("div");
     overlay.className = "ps-overlay";
     overlay.style.top = overlayTop(card) + "px";
@@ -117,11 +156,17 @@
       <div class="ps-dots"></div>`;
     card.appendChild(overlay);
 
+    const images = await imagesFor(code);
+    if (!images.length) {
+      overlay.remove(); // no photos yet: the card keeps its normal stats
+      return;
+    }
+
     const captionEl = overlay.querySelector(".ps-caption");
     const dotsEl = overlay.querySelector(".ps-dots");
     const slides = [];
     let index = 0;
-    let pending = cfg.images.length;
+    let pending = images.length;
 
     function show(i) {
       index = i;
@@ -136,12 +181,12 @@
       if (pending === 0 && !slides.length) overlay.remove();
     }
 
-    cfg.images.forEach((img) => {
+    images.forEach((img) => {
       const probe = new Image();
       probe.onload = () => {
         const slide = document.createElement("div");
         slide.className = "ps-slide";
-        slide.style.backgroundImage = `url("${img.src}")`;
+        slide.style.backgroundImage = `url("${encodeURI(img.src)}")`;
         slide.dataset.caption = img.caption || "";
         overlay.insertBefore(slide, overlay.firstChild);
         slides.push(slide);
@@ -156,7 +201,7 @@
         console.warn("Slideshow image missing:", img.src);
         settle();
       };
-      probe.src = img.src;
+      probe.src = encodeURI(img.src);
     });
 
     /* Slide rotation */
@@ -188,6 +233,8 @@
      SYNC — runs whenever script.js re-renders the project cards
      ---------------------------------------------------------- */
   function sync() {
+    if (!ready) return;
+
     const grid = document.getElementById("portfolioGrid");
     if (!grid) return;
 
@@ -197,7 +244,7 @@
       const code = getCode(card);
       const cfg = code && CONFIG.projects[code];
 
-      if (cfg && !card.querySelector(":scope > .ps-overlay")) {
+      if (cfg && cfg.enabled !== false && !card.querySelector(":scope > .ps-overlay")) {
         buildOverlay(card, code, cfg, CONFIG.stagger * n);
       }
 
@@ -212,7 +259,7 @@
     });
   }
 
-  function start() {
+  async function start() {
     const grid = document.getElementById("portfolioGrid");
 
     if (!grid) {
@@ -227,7 +274,19 @@
 
     window.addEventListener("resize", reposition);
 
+    await loadManifest();
+    ready = true;
     sync();
+
+    // Pick up newly added photos without anyone touching the TV
+    setInterval(async () => {
+      const before = JSON.stringify(manifest);
+      await loadManifest();
+      if (JSON.stringify(manifest) !== before) {
+        document.querySelectorAll(".ps-overlay").forEach((o) => o.remove());
+        sync();
+      }
+    }, CONFIG.manifestRefreshMs);
   }
 
   if (document.readyState === "loading") {
