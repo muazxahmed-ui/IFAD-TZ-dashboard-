@@ -2953,6 +2953,8 @@ async function refreshDashboardData() {
 
     refreshCsdtpLive(),
 
+    refreshCostab(),
+     
     refreshAnnouncements(),
   ]);
 
@@ -3009,6 +3011,8 @@ async function initializeDashboard() {
 
     refreshCsdtpLive(),
 
+    refreshCostab(), 
+   
     refreshAnnouncements(),
   ]);
 
