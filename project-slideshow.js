@@ -1,5 +1,5 @@
 /* ============================================================
-   project-slideshow.js  (v7 - auto-syncs with the photo folders)
+   project-slideshow.js  (v8 - auto-syncs with the photo folders)
 
    Photos are read from  assets/projects/gallery.json , which a GitHub
    Action rebuilds every time files change in assets/projects/.
@@ -168,50 +168,58 @@
     const captionEl = overlay.querySelector(".ps-caption");
     const dotsEl = overlay.querySelector(".ps-dots");
     const tagEl = overlay.querySelector(".ps-tag");
-    const slides = [];
+    const loadedSlides = []; // { order, el } - kept sorted in the original photo order
+    let slides = [];
     let index = 0;
-
-    // Load every photo first, then build the slides in the original order
-    const loaded = await Promise.all(
-      images.map(
-        (img) =>
-          new Promise((resolve) => {
-            const probe = new Image();
-            probe.onload = () => resolve(img);
-            probe.onerror = () => {
-              console.warn("Slideshow image missing:", img.src);
-              resolve(null);
-            };
-            probe.src = encodeURI(img.src);
-          }),
-      ),
-    );
-
-    loaded.filter(Boolean).forEach((img) => {
-      const slide = document.createElement("div");
-      slide.className = "ps-slide";
-      slide.style.backgroundImage = `url("${encodeURI(img.src)}")`;
-      slide.dataset.caption = img.caption || "";
-      overlay.insertBefore(slide, tagEl);
-      slides.push(slide);
-      dotsEl.appendChild(document.createElement("span"));
-    });
-
-    // No usable image at all -> remove the overlay so the card keeps its normal stats
-    if (!slides.length) {
-      overlay.remove();
-      return;
-    }
 
     function show(i) {
       index = i;
       slides.forEach((s, n) => s.classList.toggle("active", n === i));
       [...dotsEl.children].forEach((d, n) => d.classList.toggle("active", n === i));
-      captionEl.textContent = slides[i].dataset.caption;
+      captionEl.textContent = slides[i] ? slides[i].dataset.caption : "";
     }
 
-    show(0);
-    overlay.classList.add("ps-ready");
+    // Show the gallery as soon as the FIRST photo is ready; the rest join as they load
+    function addSlide(order, img) {
+      const current = slides[index];
+
+      const el = document.createElement("div");
+      el.className = "ps-slide";
+      el.style.backgroundImage = `url("${encodeURI(img.src)}")`;
+      el.dataset.caption = img.caption || "";
+      overlay.insertBefore(el, tagEl);
+
+      loadedSlides.push({ order, el });
+      loadedSlides.sort((x, y) => x.order - y.order);
+      slides = loadedSlides.map((x) => x.el);
+      dotsEl.appendChild(document.createElement("span"));
+
+      show(current ? Math.max(0, slides.indexOf(current)) : 0);
+      overlay.classList.add("ps-ready");
+    }
+
+    let pending = images.length;
+
+    function settle() {
+      pending--;
+      if (pending > 0) return;
+      console.info(`project-slideshow: ${code} - ${slides.length} of ${images.length} photos loaded`);
+      // No usable image at all -> remove the overlay so the card keeps its normal stats
+      if (!slides.length) overlay.remove();
+    }
+
+    images.forEach((img, order) => {
+      const probe = new Image();
+      probe.onload = () => {
+        addSlide(order, img);
+        settle();
+      };
+      probe.onerror = () => {
+        console.warn("Slideshow image missing:", img.src);
+        settle();
+      };
+      probe.src = encodeURI(img.src);
+    });
 
     /* Slide rotation - pauses while the gallery is hidden, so no photo is skipped */
     setTimeout(() => {
@@ -224,11 +232,6 @@
 
     /* Gallery <-> stats alternation (only for projects past design stage).
        The gallery phase lasts long enough to show every photo once. */
-    const galleryDuration = Math.min(
-      60000,
-      Math.max(CONFIG.galleryMs, slides.length * CONFIG.interval),
-    );
-
     (function cycle(galleryVisible) {
       if (!overlay.isConnected) return;
 
@@ -236,6 +239,11 @@
         overlay.classList.remove("ps-hidden");
         return setTimeout(() => cycle(true), 5000);
       }
+
+      const galleryDuration = Math.min(
+        60000,
+        Math.max(CONFIG.galleryMs, slides.length * CONFIG.interval),
+      );
 
       overlay.classList.toggle("ps-hidden", !galleryVisible);
       setTimeout(
