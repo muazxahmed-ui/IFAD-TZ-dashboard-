@@ -1,5 +1,5 @@
 /* ============================================================
-   project-slideshow.js  (v4 - auto-syncs with the photo folders)
+   project-slideshow.js  (v7 - auto-syncs with the photo folders)
 
    Photos are read from  assets/projects/gallery.json , which a GitHub
    Action rebuilds every time files change in assets/projects/.
@@ -31,19 +31,22 @@
        enabled: false  -> no gallery on that card (leave out or set true to show it) */
     projects: {
       "C-SDTP": {
-        enabled: false, // gallery OFF: the C-SDTP card keeps its live stats only
+        enabled: true, // gallery ON (set to false to hide it on this card)
         name: "Climate-Smart Smallholder Dairy",
         color: "#4f7942",
       },
       AFDP: {
+        enabled: true, // gallery ON (set to false to hide it on this card)
         name: "Agriculture & Fisheries Development",
         color: "#f7c948",
       },
       BBT: {
+        enabled: true, // gallery ON (set to false to hide it on this card)
         name: "Building a Better Tomorrow – Coffee",
         color: "#ef7d2d",
       },
       "TFSRP-H": {
+        enabled: true, // gallery ON (set to false to hide it on this card)
         name: "Food Systems Resilience – Horticulture",
         color: "#3b82f6",
       },
@@ -164,55 +167,68 @@
 
     const captionEl = overlay.querySelector(".ps-caption");
     const dotsEl = overlay.querySelector(".ps-dots");
+    const tagEl = overlay.querySelector(".ps-tag");
     const slides = [];
     let index = 0;
-    let pending = images.length;
+
+    // Load every photo first, then build the slides in the original order
+    const loaded = await Promise.all(
+      images.map(
+        (img) =>
+          new Promise((resolve) => {
+            const probe = new Image();
+            probe.onload = () => resolve(img);
+            probe.onerror = () => {
+              console.warn("Slideshow image missing:", img.src);
+              resolve(null);
+            };
+            probe.src = encodeURI(img.src);
+          }),
+      ),
+    );
+
+    loaded.filter(Boolean).forEach((img) => {
+      const slide = document.createElement("div");
+      slide.className = "ps-slide";
+      slide.style.backgroundImage = `url("${encodeURI(img.src)}")`;
+      slide.dataset.caption = img.caption || "";
+      overlay.insertBefore(slide, tagEl);
+      slides.push(slide);
+      dotsEl.appendChild(document.createElement("span"));
+    });
+
+    // No usable image at all -> remove the overlay so the card keeps its normal stats
+    if (!slides.length) {
+      overlay.remove();
+      return;
+    }
 
     function show(i) {
       index = i;
       slides.forEach((s, n) => s.classList.toggle("active", n === i));
       [...dotsEl.children].forEach((d, n) => d.classList.toggle("active", n === i));
-      captionEl.textContent = slides[i] ? slides[i].dataset.caption : "";
+      captionEl.textContent = slides[i].dataset.caption;
     }
 
-    function settle() {
-      pending--;
-      // No usable image at all -> remove the overlay so the card keeps its normal stats
-      if (pending === 0 && !slides.length) overlay.remove();
-    }
+    show(0);
+    overlay.classList.add("ps-ready");
 
-    images.forEach((img) => {
-      const probe = new Image();
-      probe.onload = () => {
-        const slide = document.createElement("div");
-        slide.className = "ps-slide";
-        slide.style.backgroundImage = `url("${encodeURI(img.src)}")`;
-        slide.dataset.caption = img.caption || "";
-        overlay.insertBefore(slide, overlay.firstChild);
-        slides.push(slide);
-        dotsEl.appendChild(document.createElement("span"));
-        if (slides.length === 1) {
-          show(0);
-          overlay.classList.add("ps-ready");
-        }
-        settle();
-      };
-      probe.onerror = () => {
-        console.warn("Slideshow image missing:", img.src);
-        settle();
-      };
-      probe.src = encodeURI(img.src);
-    });
-
-    /* Slide rotation */
+    /* Slide rotation - pauses while the gallery is hidden, so no photo is skipped */
     setTimeout(() => {
       const timer = setInterval(() => {
         if (!overlay.isConnected) return clearInterval(timer);
+        if (overlay.classList.contains("ps-hidden")) return;
         if (slides.length > 1) show((index + 1) % slides.length);
       }, CONFIG.interval);
     }, delay);
 
-    /* Gallery <-> stats alternation (only for projects past design stage) */
+    /* Gallery <-> stats alternation (only for projects past design stage).
+       The gallery phase lasts long enough to show every photo once. */
+    const galleryDuration = Math.min(
+      60000,
+      Math.max(CONFIG.galleryMs, slides.length * CONFIG.interval),
+    );
+
     (function cycle(galleryVisible) {
       if (!overlay.isConnected) return;
 
@@ -224,7 +240,7 @@
       overlay.classList.toggle("ps-hidden", !galleryVisible);
       setTimeout(
         () => cycle(!galleryVisible),
-        galleryVisible ? CONFIG.galleryMs : CONFIG.statsMs,
+        galleryVisible ? galleryDuration : CONFIG.statsMs,
       );
     })(true);
   }
