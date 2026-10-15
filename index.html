@@ -154,29 +154,27 @@
       <!-- EXECUTIVE PANELS -->
 
       <section class="dashboard-grid">
-        <!-- MAP -->
+<!-- MAP + COSTAB -->
+<div class="panel map-panel">
+  <h2>🌍 Project Coverage Map – Tanzania</h2>
 
-        <div class="panel map-panel">
-          <h2>🌍 Project Coverage Map – Tanzania</h2>
+  <div class="coverage-map-layout">
+    <div id="tanzaniaMap"></div>
 
-          <div class="coverage-map-layout">
-            <div id="tanzaniaMap"></div>
-
-            <div class="map-side">
-              <h3>Projects Legend</h3>
-
-              <div id="projectLegend"></div>
-            </div>
-          </div>
-        </div>
-        
-<section class="card costab-card" id="costab-card">
-  <div class="costab-head">
-    <h3>COSTAB · Cost and financing</h3>
-    <select id="costabProjectSelect" aria-label="COSTAB project"></select>
+    <div class="map-side">
+      <h3>Projects Legend</h3>
+      <div id="projectLegend"></div>
+    </div>
   </div>
-  <div id="costab-body"><div class="empty-state">Loading COSTAB…</div></div>
-</section>
+
+  <section class="costab-card" id="costab-card">
+    <div class="costab-head">
+      <h3>COSTAB · Cost and financing</h3>
+      <select id="costabProjectSelect" aria-label="COSTAB project"></select>
+    </div>
+    <div id="costab-body"><div class="empty-state">Loading COSTAB…</div></div>
+  </section>
+</div>
         <!-- AWPB (replaces Portfolio Timeline; keeps the same grid slot) -->
 
         <div class="panel timeline-panel awpb-host">
