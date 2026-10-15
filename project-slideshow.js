@@ -1,5 +1,5 @@
 /* ============================================================
-   project-slideshow.js  (v8 - auto-syncs with the photo folders)
+   project-slideshow.js  (v9 - auto-syncs with the photo folders)
 
    Photos are read from  assets/projects/gallery.json , which a GitHub
    Action rebuilds every time files change in assets/projects/.
@@ -312,6 +312,24 @@
       }
     }, CONFIG.manifestRefreshMs);
   }
+
+  /* Shared with idle-slideshow.js: every photo of every enabled project */
+  window.ProjectGallery = {
+    async all() {
+      await loadManifest();
+      const out = [];
+
+      for (const [code, cfg] of Object.entries(CONFIG.projects)) {
+        if (cfg.enabled === false) continue;
+        const list = await imagesFor(code);
+        list.forEach((img) =>
+          out.push({ code, name: cfg.name, color: cfg.color, src: img.src, caption: img.caption || "" }),
+        );
+      }
+
+      return out;
+    },
+  };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", start);
