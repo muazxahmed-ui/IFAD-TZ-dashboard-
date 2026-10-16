@@ -2778,7 +2778,14 @@ async function refreshCsdtpLive() {
    19C. COSTAB — PROJECT COST AND FINANCING
    Tab layout: Project | Group | Item | Amount_USDm
    Groups used: Summary, Component, Financier
+
+   UNITS: the sheet holds US$ THOUSANDS (e.g. 231,493 = $231.49M)
+   even though the column is called Amount_USDm. Everything is
+   converted to US$ MILLIONS once, when the rows are read, so the
+   money labels and the percentages always use the same unit.
    ============================================================ */
+
+const COSTAB_UNIT_DIVISOR = 1000; // sheet value / 1000 = US$ millions
 
 let costabRows = [];
 
@@ -2812,9 +2819,11 @@ async function refreshCostab() {
         project: getRowValue(row, ["Project", "Project Name", "Project Code"]),
         group: getRowValue(row, ["Group", "Section", "Category"]),
         item: getRowValue(row, ["Item", "Label", "Name"]),
-        amount: parseNumber(
-          getRowValue(row, ["Amount_USDm", "Amount USDm", "Amount", "Value"]),
-        ),
+        // converted to US$ millions HERE, and nowhere else
+        amount:
+          parseNumber(
+            getRowValue(row, ["Amount_USDm", "Amount_USDk", "Amount USDm", "Amount", "Value"]),
+          ) / COSTAB_UNIT_DIVISOR,
       }))
       .filter((row) => row.project && row.group && row.item);
 
